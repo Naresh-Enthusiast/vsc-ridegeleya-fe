@@ -1,0 +1,10 @@
+<app-navbar></app-navbar>
+
+<div class="home-container">
+  <h1>Welcome to the Home Page 🎉</h1>
+  <p>Data fetched from API will appear below:</p>
+
+  <ul>
+    <li *ngFor="let item of data">{{ item.name }}</li>
+  </ul>
+</div>
