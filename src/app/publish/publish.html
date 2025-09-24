@@ -1,1 +1,19 @@
-<p>publish works!</p>
+<div class="publish-container">
+  <h2>Publish a Ride</h2>
+  <form (ngSubmit)="postRide()" class="publish-form">
+
+    <label>From</label>
+    <input type="text" [(ngModel)]="ride.from" name="from" placeholder="Enter starting location" required />
+
+    <label>To</label>
+    <input type="text" [(ngModel)]="ride.to" name="to" placeholder="Enter destination" required />
+
+    <label>Date</label>
+    <input type="date" [(ngModel)]="ride.date" name="date" required />
+
+    <label>Time</label>
+    <input type="time" [(ngModel)]="ride.time" name="time" required />
+
+    <button type="submit">Post Ride</button>
+  </form>
+</div>

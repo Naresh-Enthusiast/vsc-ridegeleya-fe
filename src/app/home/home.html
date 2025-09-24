@@ -1,10 +1,61 @@
 <app-navbar></app-navbar>
 
+<!-- Main Container -->
 <div class="home-container">
-  <h1>Welcome to the Home Page 🎉</h1>
-  <p>Data fetched from API will appear below:</p>
 
-  <ul>
-    <li *ngFor="let item of data">{{ item.name }}</li>
-  </ul>
+  <!-- Ride Search Form -->
+  <form (ngSubmit)="searchRides()" class="ride-form">
+    <h2>Search Your Ride</h2>
+
+    <select [(ngModel)]="rideQuery.from" name="from" required>
+      <option value="" disabled>From</option>
+      <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+    </select>
+
+    <select [(ngModel)]="rideQuery.to" name="to" required>
+      <option value="" disabled>To</option>
+      <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+    </select>
+
+    <input type="date" [(ngModel)]="rideQuery.date" name="date" required />
+    <input type="number" [(ngModel)]="rideQuery.passengers" name="passengers" min="1" placeholder="Passengers" required />
+    <input type="time" [(ngModel)]="rideQuery.time" name="time" required />
+
+    <button type="submit">Search</button>
+  </form>
+
+  <!-- Search Results -->
+  <div class="rides-list" *ngIf="rides.length > 0">
+    <h3>Available Rides</h3>
+    <ul>
+      <li *ngFor="let ride of rides">
+        {{ ride.from }} → {{ ride.to }} | Date: {{ ride.date }} | Time: {{ ride.time }} | Seats: {{ ride.availableSeats }}
+      </li>
+    </ul>
+  </div>
+
+  
+  <!-- Features Section -->
+  <div class="features-section">
+    <h2>Why Choose RideGeleya?</h2>
+
+    <!-- Parent Container -->
+    <div class="features-container">
+      <div class="feature">
+        ⚡
+        <h3>Lightning Fast</h3>
+        <p>Find and book rides instantly with just a few clicks.</p>
+      </div>
+      <div class="feature">
+        ✅
+        <h3>100% Verified</h3>
+        <p>All rides and users are verified for your safety.</p>
+      </div>
+      <div class="feature">
+        📍
+        <h3>Real-time Tracking</h3>
+        <p>Track your ride live and share location with friends.</p>
+      </div>
+    </div>
+  </div>
 </div>

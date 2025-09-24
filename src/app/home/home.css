@@ -1,0 +1,92 @@
+.home-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Ride Form */
+.ride-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.ride-form h2 {
+  flex-basis: 100%;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.ride-form select,
+.ride-form input,
+.ride-form button {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  min-width: 150px;
+}
+
+.ride-form button {
+  background: #1976d2;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.ride-form button:hover {
+  background: #145a9e;
+}
+
+/* Features Section */
+.features-section {
+  margin-top: 40px;
+  text-align: center;
+}
+
+/* Parent container for features */
+.features-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Each feature card */
+.feature {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.feature:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.feature h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #66a9ed;
+}
+.feature p {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
