@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { AdminRoutingModule } from "../admin/admin-routing-module";
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [AdminRoutingModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrls: ['./navbar.css']
 })
 export class NavbarComponent {
 
