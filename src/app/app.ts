@@ -13,3 +13,5 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class App {
   protected readonly title = signal('vsc-ridegeleya');
 }
+
+

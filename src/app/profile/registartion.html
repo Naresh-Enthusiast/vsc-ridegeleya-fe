@@ -1,0 +1,236 @@
+<div class="registration-container">
+  <div class="registration-card">
+    <h2 class="registration-title">Create Your Account</h2>
+    <p class="registration-subtitle">Please fill in your information to register</p>
+
+    @if (submitSuccess) {
+      <div class="alert alert-success">
+        Registration successful! Your account has been created.
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="firstName" 
+            formControlName="firstName"
+            class="form-control"
+            [class.invalid]="f['firstName'].invalid && f['firstName'].touched"
+          />
+          @if (f['firstName'].invalid && f['firstName'].touched) {
+            <div class="error-message">
+              @if (f['firstName'].errors?.['required']) {
+                <span>First name is required</span>
+              }
+              @if (f['firstName'].errors?.['minlength']) {
+                <span>Must be at least 1 characters</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="lastName" 
+            formControlName="lastName"
+            class="form-control"
+            [class.invalid]="f['lastName'].invalid && f['lastName'].touched"
+          />
+          @if (f['lastName'].invalid && f['lastName'].touched) {
+            <div class="error-message">
+              @if (f['lastName'].errors?.['required']) {
+                <span>Last name is required</span>
+              }
+              @if (f['lastName'].errors?.['minlength']) {
+                <span>Must be at least 2 characters</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gender">Gender <span class="required">*</span></label>
+          <select 
+            id="gender" 
+            formControlName="gender"
+            class="form-control"
+            [class.invalid]="f['gender'].invalid && f['gender'].touched"
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          @if (f['gender'].invalid && f['gender'].touched) {
+            <div class="error-message">
+              Gender is required
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+          <input 
+            type="date" 
+            id="dateOfBirth" 
+            formControlName="dateOfBirth"
+            class="form-control"
+            [class.invalid]="f['dateOfBirth'].invalid && f['dateOfBirth'].touched"
+          />
+          @if (f['dateOfBirth'].invalid && f['dateOfBirth'].touched) {
+            <div class="error-message">
+              Date of birth is required
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email <span class="required">*</span></label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          class="form-control"
+          placeholder="example@email.com"
+          [class.invalid]="f['email'].invalid && f['email'].touched"
+        />
+        @if (f['email'].invalid && f['email'].touched) {
+          <div class="error-message">
+            @if (f['email'].errors?.['required']) {
+              <span>Email is required</span>
+            }
+            @if (f['email'].errors?.['email']) {
+              <span>Please enter a valid email</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+          <input 
+            type="tel" 
+            id="phoneNumber" 
+            formControlName="phoneNumber"
+            class="form-control"
+            placeholder="1234567890"
+            [class.invalid]="f['phoneNumber'].invalid && f['phoneNumber'].touched"
+          />
+          @if (f['phoneNumber'].invalid && f['phoneNumber'].touched) {
+            <div class="error-message">
+              @if (f['phoneNumber'].errors?.['required']) {
+                <span>Phone number is required</span>
+              }
+              @if (f['phoneNumber'].errors?.['pattern']) {
+                <span>Must be 10 digits</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="nationalIdNumber">National ID Number <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="nationalIdNumber" 
+            formControlName="nationalIdNumber"
+            class="form-control"
+            [class.invalid]="f['nationalIdNumber'].invalid && f['nationalIdNumber'].touched"
+          />
+          @if (f['nationalIdNumber'].invalid && f['nationalIdNumber'].touched) {
+            <div class="error-message">
+              @if (f['nationalIdNumber'].errors?.['required']) {
+                <span>National ID is required</span>
+              }
+              @if (f['nationalIdNumber'].errors?.['minlength']) {
+                <span>Must be at least 5 characters</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="password">Password <span class="required">*</span></label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password"
+            class="form-control"
+            [class.invalid]="f['password'].invalid && f['password'].touched"
+          />
+          @if (f['password'].invalid && f['password'].touched) {
+            <div class="error-message">
+              @if (f['password'].errors?.['required']) {
+                <span>Password is required</span>
+              }
+              @if (f['password'].errors?.['minlength']) {
+                <span>Must be at least 6 characters</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            formControlName="confirmPassword"
+            class="form-control"
+            [class.invalid]="(f['confirmPassword'].invalid || registrationForm.errors?.['mismatch']) && f['confirmPassword'].touched"
+          />
+          @if (f['confirmPassword'].touched) {
+            <div class="error-message">
+              @if (f['confirmPassword'].errors?.['required']) {
+                <span>Please confirm your password</span>
+              }
+              @if (registrationForm.errors?.['mismatch'] && !f['confirmPassword'].errors?.['required']) {
+                <span>Passwords do not match</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            formControlName="isAvailable"
+            class="checkbox-input"
+          />
+          <span>Mark as available</span>
+        </label>
+      </div>
+
+      <button 
+        type="submit" 
+        class="submit-btn"
+        [disabled]="isSubmitting"
+      >
+        {{ isSubmitting ? 'Registering...' : 'Register' }}
+      </button>
+    </form>
+
+    <p class="login-link">
+      Already have an account? <a routerLink="/login">Login here</a>
+    </p>
+  </div>
+</div>
