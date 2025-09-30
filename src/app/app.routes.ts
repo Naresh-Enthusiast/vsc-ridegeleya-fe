@@ -5,7 +5,7 @@ import { HomeComponent } from './home/home';
 import { PublishComponent } from "./publish/publish";
 import { RegistrationComponent } from "./profile/registartion";
 import { LoginComponent } from './profile/login/login';
-import { ProfileComponent } from "./profile/profile";
+
 import { AdminLogin } from './home/adminLogin/AdminLogin';
 import { FormsModule } from '@angular/forms';
 
@@ -15,6 +15,7 @@ export const routes: Routes = [
   { path: 'create', component: PublishComponent },
   { path: 'register', component: RegistrationComponent },
   {path:'login',component:LoginComponent},
+  {path:'AdminLogin',component:AdminLogin},
   {path: 'admin',loadChildren: () =>import('./home/admin/admin-module').then(m => m.AdminModule)}
 ];
 
