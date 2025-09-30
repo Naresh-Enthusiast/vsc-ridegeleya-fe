@@ -5,6 +5,9 @@ import { HomeComponent } from './home/home';
 import { PublishComponent } from "./publish/publish";
 import { RegistrationComponent } from "./profile/registartion";
 import { LoginComponent } from './profile/login/login';
+import { ProfileComponent } from "./profile/profile";
+import { AdminLogin } from './home/adminLogin/AdminLogin';
+import { FormsModule } from '@angular/forms';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,7 +19,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes),FormsModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

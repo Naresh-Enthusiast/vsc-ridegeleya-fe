@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './publish.html',
   styleUrls: ['./publish.css']
 })
-export class PublishComponent {
+export class PublishComponent  {
   ride = {
     from: '',
     to: '',

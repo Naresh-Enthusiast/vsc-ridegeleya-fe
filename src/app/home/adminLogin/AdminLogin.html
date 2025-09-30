@@ -1,0 +1,39 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Admin Login</h2>
+
+    <form (ngSubmit)="login()">
+      <!-- Username -->
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Enter your username"
+          required
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <!-- Back to Home -->
+    <button routerLink="/home" class="back-btn">⬅ Back to Home</button>
+  </div>
+</div>
