@@ -1,0 +1,93 @@
+<div class="publisher-requests-container">
+  <div class="header-section">
+    <h2>Publisher Requests</h2>
+    <button class="refresh-btn" (click)="loadRequests()" [disabled]="loading">
+      <span *ngIf="!loading">🔄 Refresh</span>
+      <span *ngIf="loading">⏳ Loading...</span>
+    </button>
+  </div>
+
+  <div class="loader" *ngIf="loading && requests.length === 0">
+    <div class="spinner"></div>
+    <p>Loading requests...</p>
+  </div>
+
+  <div class="no-data" *ngIf="!loading && requests.length === 0">
+    <div class="no-data-icon">📭</div>
+    <h3>No Publisher Requests</h3>
+    <p>There are currently no publisher requests to display.</p>
+  </div>
+
+  <div class="table-wrapper" *ngIf="!loading && requests.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>License</th>
+          <th>License Photo</th>
+          <th>RC Book</th>
+          <th>Model</th>
+          <th>Color</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of requests" 
+            [class.processing]="processingId === req.publishRequestId"
+            class="fade-row">
+          <td>{{ req.publishRequestId }}</td>
+          <td>{{ req.userId }}</td>
+          <td>{{ req.license_Number }}</td>
+          <td>
+            <img [src]="'data:image/jpeg;base64,' + req.license_Photo"
+                 alt="License" 
+                 class="doc-photo"
+                 (click)="viewImage(req.license_Photo)"/>
+          </td>
+          <td>
+            <img [src]="'data:image/jpeg;base64,' + req.rcBook_Photo"
+                 alt="RC Book" 
+                 class="doc-photo"
+                 (click)="viewImage(req.rcBook_Photo)"/>
+          </td>
+          <td>{{ req.vehicle_Model }}</td>
+          <td>
+            <span class="color-badge" [style.background-color]="req.vehicle_Color">
+              {{ req.vehicle_Color }}
+            </span>
+          </td>
+          <td>
+            <span class="status" [ngClass]="{
+              'approved': req.status === 'Accepted',
+              'pending': req.status === 'Pending',
+              'rejected': req.status === 'Rejected'
+            }">{{ req.status }}</span>
+          </td>
+          <td class="actions-cell">
+            <button class="approve-btn" 
+                    (click)="approveRequest(req.publishRequestId)"
+                    [disabled]="req.status !== 'Pending' || processingId === req.publishRequestId">
+              <span *ngIf="processingId !== req.publishRequestId">✓ Approve</span>
+              <span *ngIf="processingId === req.publishRequestId">⏳</span>
+            </button>
+            <button class="reject-btn" 
+                    (click)="rejectRequest(req.publishRequestId)"
+                    [disabled]="req.status !== 'Pending' || processingId === req.publishRequestId">
+              <span *ngIf="processingId !== req.publishRequestId">✕ Reject</span>
+              <span *ngIf="processingId === req.publishRequestId">⏳</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="image-modal" *ngIf="selectedImage" (click)="closeImage()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeImage()">✕</button>
+      <img [src]="selectedImage" alt="Document">
+    </div>
+  </div>
+</div>

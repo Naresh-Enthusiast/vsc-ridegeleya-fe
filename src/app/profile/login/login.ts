@@ -105,7 +105,6 @@ export class LoginComponent implements OnInit {
           this.errorMessage = error.error?.message || 'Login credentials wrong. Please try again.';
         }
         
-        console.error('Login error:', error);
       }
     });
   }

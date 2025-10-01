@@ -1,0 +1,88 @@
+/* Container */
+.publish-container {
+  max-width: 450px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Title */
+.publish-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c7be5;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* Form layout */
+.publish-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.publish-form label {
+  margin-top: 12px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Inputs */
+.publish-form input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.publish-form input:focus {
+  border-color: #2c7be5;
+  box-shadow: 0px 0px 6px rgba(44, 123, 229, 0.4);
+}
+
+/* Small note */
+.publish-form .note {
+  display: block;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Button */
+.publish-form button {
+  margin-top: 20px;
+  padding: 12px;
+  background: #2c7be5;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.publish-form button:hover {
+  background: #1a66d1;
+  transform: translateY(-2px);
+}
+
+.publish-form button:active {
+  transform: translateY(1px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .publish-container {
+    margin: 20px;
+    padding: 20px;
+  }
+}

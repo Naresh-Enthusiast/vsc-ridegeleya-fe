@@ -1,31 +1,30 @@
 import { Component } from '@angular/core';
-import { AdminRoutingModule } from '../admin/admin-routing-module';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-
+import { CommonModule } from '@angular/common';
+import { PublisherRequests } from '../admin/publisher-requests/publisher-requests';
+import { AdminService } from '../../services/admin';
 @Component({
-  selector: 'app-AdminLogin',
+  selector: 'app-admin-login',
   standalone: true,
-  imports: [AdminRoutingModule,FormsModule],
-  templateUrl: './AdminLogin.html',
-  styleUrl: './AdminLogin.css'
+  imports: [FormsModule, CommonModule, PublisherRequests],
+  templateUrl: './adminLogin.html',
+  styleUrls: ['./adminLogin.css']
 })
-export class AdminLogin 
-{
-  username: string = '';
-  password: string = '';
+export class AdminLogin {
+  username = '';
+  password = '';
+  isLoggedIn = false;
 
-  constructor(private router: Router) {}
+  constructor(private adminService: AdminService) {}
 
   login() {
-    const adminUser = 'admin';
-    const adminPass = 'admin123';
-
-    if (this.username === adminUser && this.password === adminPass) {
-      this.router.navigate(['/admin/dashboard']);
-    } 
-    else {
-      alert('Invalid credentials. Please try again.');
-    }
+    this.adminService.login({ username: this.username, password: this.password })
+      .subscribe({
+        next: () => {
+          this.isLoggedIn = true;
+          alert('Login successful');
+        },
+        error: () => alert('Login failed')
+      });
   }
 }

@@ -1,0 +1,32 @@
+<div class="publish-container">
+  <h2>Publish a Ride</h2>
+
+  <form (ngSubmit)="postRide()" #rideForm="ngForm" class="publish-form">
+
+    <label>From</label>
+    <input type="text" [(ngModel)]="ride.from" name="from" placeholder="Enter starting location" required />
+
+    <label>To</label>
+    <input type="text" [(ngModel)]="ride.to" name="to" placeholder="Enter destination" required />
+
+    <label>Date</label>
+    <input type="date" [(ngModel)]="ride.date" name="date" required />
+
+    <label>Time</label>
+    <input type="time" [(ngModel)]="ride.startTime" name="startTime" required />
+
+    <label>Total Seats</label>
+    <input type="number" [(ngModel)]="ride.totalSeats" name="totalSeats" min="1" required />
+
+    <label>Available Seats</label>
+    <input type="number" [(ngModel)]="ride.availableSeats" name="availableSeats" min="1" required />
+
+    <label>Amount</label>
+    <input type="number" [(ngModel)]="ride.amount" name="amount" min="0" placeholder="Enter amount" required />
+
+    <button type="submit">Publish Ride</button>
+  </form>
+
+  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</div>

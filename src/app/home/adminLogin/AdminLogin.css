@@ -1,92 +1,76 @@
-/* Background */
-.login-container {
-  height: 100vh;
+/* Full page background */
+.login-container, .logged-in-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Card */
+/* Login card */
 .login-card {
-  background: #fff;
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   width: 350px;
   text-align: center;
-  animation: fadeIn 0.6s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
 }
 
 .login-card h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 30px;
   color: #333;
 }
 
-/* Input fields */
+/* Input styling */
 .input-group {
+  margin-bottom: 20px;
   text-align: left;
-  margin-bottom: 1.2rem;
-}
-
-.input-group label {
-  display: block;
-  font-size: 0.9rem;
-  margin-bottom: 0.4rem;
-  color: #444;
 }
 
 .input-group input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
+  padding: 12px;
   border-radius: 8px;
+  border: 1px solid #ccc;
   outline: none;
-  transition: border 0.3s;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .input-group input:focus {
-  border-color: #4facfe;
+  border-color: #667eea;
+  box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
 }
 
-.back-btn {
-  margin-top: 1rem;
+/* Button styling */
+button {
   width: 100%;
-  padding: 0.7rem;
-  background: #eee;
-  border: none;
-  border-radius: 8px;
-  color: #333;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.back-btn:hover {
-  background: #ddd;
-}
-
-/* Button */
-.login-btn {
-  width: 100%;
-  padding: 0.8rem;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
-  border: none;
-  border-radius: 8px;
+  padding: 12px;
+  background-color: #667eea;
   color: white;
-  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-.login-btn:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #00f2fe, #4facfe);
+button:hover {
+  background-color: #5a67d8;
 }
 
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Logged-in container styling */
+.logged-in-container {
+  background: #f5f5f5;
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 20px;
 }
