@@ -1,4 +1,6 @@
+<div [class.blurred]="showLoginModal">
 <app-navbar></app-navbar>
+
 
 <!-- Main Container -->
 <div class="home-container">
@@ -58,5 +60,12 @@
       </div>
       
     </div>
+  </div>
+</div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showLoginModal">
+  <div class="modal-content">
+    <app-login (close)="closeLoginModal()"></app-login>
   </div>
 </div>

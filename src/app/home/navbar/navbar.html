@@ -1,35 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+<nav class="navbar">
+  <!-- Left -->
+  <div class="nav-left">
+    <h2>RideGeleya</h2>
+  </div>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RideGeleya</title>
-</head>
+  <!-- Middle -->
+  <div class="nav-middle">
+    <a routerLink="/home">Home</a>
+    <a routerLink="/about">About</a>
+    <a routerLink="/contact">Contact</a>
+  </div>
 
-<body>
-  <nav class="navbar">
-    <!-- Left -->
-    <div class="nav-left">
-      <h2>RideGeleya</h2>
-    </div>
+  <!-- Right -->
+  <div class="nav-right">
+    <button class="publish-btn" routerLink="/create">Publish a Ride</button>
 
-    <!-- Middle -->
-    <div class="nav-middle">
-      <a routerLink="/home">Home</a>
-      <a routerLink="/about">About</a>
-      <a routerLink="/contact">Contact</a>
-      <!-- <a routerLink="/admin">Admin</a> -->
-      </div>
 
-    <!-- Right -->
-    <div class="nav-right">
-      
-      <button class="publish-btn" routerLink="/create">Publish a Ride</button>
-      <button class="icon-btn" routerLink="/login">👤</button>
-      <button class="icon-btn" routerLink="/AdminLogin">Admin</button>
-    </div>
-  </nav>
-</body>
+    
+    <!-- Conditional Login/Profile -->
+    <ng-container *ngIf="!isLoggedIn; else profileTemplate">
+      <button class="icon-btn" routerLink="/login"> Login</button>
+    </ng-container>
 
-</html>
+    <ng-template #profileTemplate>
+      <a routerLink="/userprofile">
+        👤
+      </a>
+     
+    </ng-template>
+
+    <button class="icon-btn" routerLink="/AdminLogin">Admin</button>
+    <button class="icon-btn" routerLink="/PublisherRequest">PublisherRequest</button>
+  </div>
+</nav>

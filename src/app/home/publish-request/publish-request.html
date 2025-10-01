@@ -1,0 +1,165 @@
+<div class="container">
+  <div class="form-wrapper">
+    <h2 class="form-title">Publisher Request Application</h2>
+    
+    <!-- Success Message -->
+    <div class="alert alert-success" *ngIf="submitSuccess">
+      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      Your application has been submitted successfully!
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-error" *ngIf="submitError">
+      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="publisherForm" (ngSubmit)="onSubmit()">
+      
+        <!-- User ID  -->
+          <div class="form-group">
+  <!-- <label for="userId">User ID</label>
+  <input 
+    type="text" 
+    id="userId" 
+    formControlName="userId"
+    class="form-control"
+    readonly
+  /> -->
+</div> 
+
+       
+      <!-- License Number -->
+      <div class="form-group">
+        <label for="license_Number">License Number <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="license_Number" 
+          formControlName="license_Number"
+          class="form-control"
+          placeholder="Enter license number (e.g., DL-1234567890)"
+          [class.invalid]="f['license_Number'].invalid && f['license_Number'].touched"
+        />
+        <div class="error-message" *ngIf="f['license_Number'].invalid && f['license_Number'].touched">
+          <span *ngIf="f['license_Number'].errors?.['required']">License number is required.</span>
+          <span *ngIf="f['license_Number'].errors?.['pattern']">Please enter a valid license number (alphanumeric and hyphens only).</span>
+        </div>
+      </div>
+
+      <!-- License Photo -->
+      <div class="form-group">
+        <label for="license_Photo">License Photo <span class="">*</span></label>
+        <div class="file-upload-wrapper">
+          <input 
+            type="file" 
+            id="license_Photo" 
+            (change)="onLicensePhotoSelect($event)"
+            accept="image/*"
+            class="file-input"
+            [class.invalid]="f['license_Photo'].invalid && f['license_Photo'].touched"
+          />
+          <label for="license_Photo" class="file-label">
+            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose License Photo
+          </label>
+        </div>
+        <div class="preview-container" *ngIf="licensePhotoPreview">
+          <img [src]="licensePhotoPreview" alt="License Preview" class="image-preview">
+          <button type="button" class="remove-btn" (click)="removeLicensePhoto()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="error-message" *ngIf="f['license_Photo'].invalid && f['license_Photo'].touched">
+          License photo is required.
+        </div>
+      </div>
+
+      <!-- RC Book Photo -->
+      <div class="form-group">
+        <label for="rcBook_Photo">RC Book Photo <span class="">*</span></label>
+        <div class="file-upload-wrapper">
+          <input 
+            type="file" 
+            id="rcBook_Photo" 
+            (change)="onRcBookPhotoSelect($event)"
+            accept="image/*"
+            class="file-input"
+            [class.invalid]="f['rcBook_Photo'].invalid && f['rcBook_Photo'].touched"
+          />
+          <label for="rcBook_Photo" class="file-label">
+            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Choose RC Book Photo
+          </label>
+        </div>
+        <div class="preview-container" *ngIf="rcBookPhotoPreview">
+          <img [src]="rcBookPhotoPreview" alt="RC Book Preview" class="image-preview">
+          <button type="button" class="remove-btn" (click)="removeRcBookPhoto()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="error-message" *ngIf="f['rcBook_Photo'].invalid && f['rcBook_Photo'].touched">
+          RC Book photo is required.
+        </div>
+      </div>
+
+      <!-- Vehicle Color -->
+      <div class="form-group">
+        <label for="vehicle_Color">Vehicle Color <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="vehicle_Color" 
+          formControlName="vehicle_Color"
+          class="form-control"
+          placeholder="Enter vehicle color"
+          [class.invalid]="f['vehicle_Color'].invalid && f['vehicle_Color'].touched"
+        />
+        <div class="error-message" *ngIf="f['vehicle_Color'].invalid && f['vehicle_Color'].touched">
+          Vehicle color is required.
+        </div>
+      </div>
+
+      <!-- Vehicle Model -->
+      <div class="form-group">
+        <label for="vehicle_Model">Vehicle Model <span class="required">*</span></label>
+        <input 
+          type="text" 
+          id="vehicle_Model" 
+          formControlName="vehicle_Model"
+          class="form-control"
+          placeholder="Enter vehicle model (e.g., Honda Activa 6G)"
+          [class.invalid]="f['vehicle_Model'].invalid && f['vehicle_Model'].touched"
+        />
+        <div class="error-message" *ngIf="f['vehicle_Model'].invalid && f['vehicle_Model'].touched">
+          Vehicle model is required.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="button-group">
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="isSubmitting"
+        >
+          <span *ngIf="!isSubmitting">Submit Application</span>
+          <span *ngIf="isSubmitting" class="spinner-wrapper">
+            <span class="spinner"></span>
+            Submitting...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar';
+import { LoginComponent } from "../profile/login/login";
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, LoginComponent],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -19,6 +20,19 @@ export class HomeComponent {
     passengers: 1,
     time: ''
   };
+
+   showLoginModal = false;
+
+  constructor() {
+    // Listen for navbar event
+    window.addEventListener('openLoginModal', () => {
+      this.showLoginModal = true;
+    });
+  }
+
+  closeLoginModal() {
+    this.showLoginModal = false;
+  }
 
   rides: any[] = [];
 
