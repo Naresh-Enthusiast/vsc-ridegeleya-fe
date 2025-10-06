@@ -1,67 +1,83 @@
 <div [class.blurred]="showLoginModal">
-<app-navbar></app-navbar>
+  <app-navbar></app-navbar>
 
+  <!-- Main Container -->
+  <div class="home-container">
 
-<!-- Main Container -->
-<div class="home-container">
+    <!-- Ride Search Form -->
+    <form (ngSubmit)="searchRides()" class="ride-form">
+      <h2>Search Your Ride</h2>
 
-  <!-- Ride Search Form -->
-  <form (ngSubmit)="searchRides()" class="ride-form">
-    <h2>Search Your Ride</h2>
+      <!-- From Location Input with Suggestions -->
+      <input type="text" [(ngModel)]="rideQuery.from" name="from" placeholder="From" (input)="filterLocations('from')"
+        list="fromLocations" required />
+      <datalist id="fromLocations">
+        <option *ngFor="let loc of filteredFromLocations" [value]="loc"></option>
+      </datalist>
 
-    <select [(ngModel)]="rideQuery.from" name="from" required>
-      <option value="" disabled>From</option>
-      <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
-    </select>
+      <!-- To Location Input with Suggestions -->
+      <input type="text" [(ngModel)]="rideQuery.to" name="to" placeholder="To" (input)="filterLocations('to')"
+        list="toLocations" required />
+      <datalist id="toLocations">
+        <option *ngFor="let loc of filteredToLocations" [value]="loc"></option>
+      </datalist>
 
-    <select [(ngModel)]="rideQuery.to" name="to" required>
-      <option value="" disabled>To</option>
-      <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
-    </select>
+      <input type="date" [(ngModel)]="rideQuery.date" name="date" required />
+      <input type="number" [(ngModel)]="rideQuery.passengers" name="passengers" min="1" placeholder="Passengers"
+        required />
 
-    <input type="date" [(ngModel)]="rideQuery.date" name="date" required />
-    <input type="number" [(ngModel)]="rideQuery.passengers" name="passengers" min="1" placeholder="Passengers" required />
-    <input type="time" [(ngModel)]="rideQuery.time" name="time" required />
+      <button type="submit">Search</button>
+    </form>
 
-    <button type="submit">Search</button>
-  </form>
+    <!-- ✅ Search Results Section -->
+    <div class="rides-list" *ngIf="rides.length > 0">
+      <h3>Available Rides</h3>
 
-  <!-- Search Results -->
-  <div class="rides-list" *ngIf="rides.length > 0">
-    <h3>Available Rides</h3>
-    <ul>
-      <li *ngFor="let ride of rides">
-        {{ ride.from }} → {{ ride.to }} | Date: {{ ride.date }} | Time: {{ ride.time }} | Seats: {{ ride.availableSeats }}
-      </li>
-    </ul>
-  </div>
+      <div class="ride-cards">
+        <div class="ride-card" *ngFor="let ride of rides">
+          <div class="ride-header">
+            <h4>{{ ride.from || ride.From || 'Unknown Source' }} → {{ ride.to || ride.To || 'Unknown Destination' }}
+            </h4>
+          </div>
 
-  
-  <!-- Features Section -->
-  <div class="features-section">
-    <h2>Why Choose RideGeleya?</h2>
-
-    <!-- Parent Container -->
-    <div class="features-container">
-      <div class="feature">
-        ⚡
-        <h3>Lightning Fast</h3>
-        <p>Find and book rides instantly with just a few clicks.</p>
+          <!-- Dynamically show all key-value pairs -->
+          <div class="ride-body">
+            <div *ngFor="let key of getRideKeys(ride)">
+              <p><strong>{{ formatKey(key) }}:</strong> {{ ride[key] }}</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="feature">
-        ✅
-        <h3>100% Verified</h3>
-        <p>All rides and users are verified for your safety.</p>
+    </div>
+
+
+    <!-- ❌ Error Message (if API error occurs) -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+      <h2>Why Choose RideGeleya?</h2>
+      <div class="features-container">
+        <div class="feature">
+          ⚡
+          <h3>Lightning Fast</h3>
+          <p>Find and book rides instantly with just a few clicks.</p>
+        </div>
+        <div class="feature">
+          ✅
+          <h3>100% Verified</h3>
+          <p>All rides and users are verified for your safety.</p>
+        </div>
+        <div class="feature">
+          📍
+          <h3>Real-time Tracking</h3>
+          <p>Track your ride live and share location with friends.</p>
+        </div>
       </div>
-      <div class="feature">
-        📍
-        <h3>Real-time Tracking</h3>
-        <p>Track your ride live and share location with friends.</p>
-      </div>
-      
     </div>
   </div>
-</div>
 </div>
 
 <div class="modal-backdrop" *ngIf="showLoginModal">
