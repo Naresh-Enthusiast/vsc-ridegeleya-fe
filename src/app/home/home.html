@@ -45,6 +45,9 @@
             <div *ngFor="let key of getRideKeys(ride)">
               <p><strong>{{ formatKey(key) }}:</strong> {{ ride[key] }}</p>
             </div>
+            <div class="ride-footer">
+              <button class="book-btn" (click)="bookRide(ride)">Book Now</button>
+            </div>
           </div>
         </div>
       </div>

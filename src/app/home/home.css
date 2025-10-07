@@ -119,3 +119,22 @@
   margin: 0.3rem 0;
   font-size: 0.95rem;
 }
+.book-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+}
+
+.book-btn:hover {
+  background-color: #0056b3;
+}
+
+.ride-footer {
+  text-align: right;
+  margin-top: 10px;
+}

@@ -33,7 +33,7 @@ export class HomeComponent {
   showLoginModal = false;
   rides: any[] = [];
   errorMessage: string = '';
-  hasSearched: boolean = false; // ✅ used to control when to show "no rides" message
+  hasSearched: boolean = false; 
 
   constructor(private rideService: RideService) {
     window.addEventListener('openLoginModal', () => {
@@ -65,7 +65,7 @@ export class HomeComponent {
     else this.filteredToLocations = filtered;
   }
 
-  // ✅ Updated API-based search method
+  
   searchRides() {
     this.hasSearched = true;
     this.errorMessage = '';
@@ -96,4 +96,9 @@ export class HomeComponent {
   formatKey(key: string): string {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
   }
+  bookRide(ride: any) {
+  console.log('Booking ride:', ride);
+  alert(`Booking confirmed for ride from ${ride.from || ride.From} to ${ride.to || ride.To}!`);
+}
+
 }
