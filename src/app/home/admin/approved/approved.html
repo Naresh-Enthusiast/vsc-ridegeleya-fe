@@ -1,0 +1,52 @@
+<div>
+  <table border="1" cellspacing="0" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>User ID</th>
+        <th>License Number</th>
+        <th>license_Photo</th>
+        <th>RC Book Photo</th>
+        <th>Vehicle Color</th>
+        <th>Vehicle Model</th>
+        <th>Status</th>
+        <th>Approved At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of requests">
+        <td>{{ request.publisherId }}</td>
+        <td>{{ request.userId }}</td>
+        <td>{{ request.license_Number }}</td>
+       <td>
+          <img 
+            *ngIf="request.license_Photo" 
+            [src]="'data:image/jpeg;base64,' + request.license_Photo" 
+            alt="RC Book Photo" 
+            class="thumbnail"
+            (click)="viewImage(request.license_Photo)" />
+          <span *ngIf="!request.license_Photo">No Photo</span>
+        </td>
+        <td>
+          <img 
+            *ngIf="request.rcBook_Photo" 
+            [src]="'data:image/jpeg;base64,' + request.rcBook_Photo" 
+            alt="RC Book Photo" 
+            class="thumbnail"
+            (click)="viewImage(request.rcBook_Photo)" />
+          <span *ngIf="!request.rcBook_Photo">No Photo</span>
+        </td>
+        <td>{{ request.vehicle_Color }}</td>
+        <td>{{ request.vehicle_Model }}</td>
+        <td>{{ request.status }}</td>
+        <td>{{ request.approvedAt | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Optional image preview -->
+<div *ngIf="selectedImage" class="preview">
+  <h3>Preview</h3>
+  <img [src]="selectedImage" alt="Preview" />
+</div>

@@ -24,6 +24,14 @@ export class AuthService {
     return storedId ? parseInt(storedId, 10) : null;
   }
 
+  getPublisherId(): number | null {
+    if (this.loggedInUserId) return this.loggedInUserId;
+
+    const storedId = localStorage.getItem('userId');
+    return storedId ? parseInt(storedId, 10) : null;
+  }
+
+
   isLoggedIn(): boolean {
     return this.getUserId() !== null;
   }

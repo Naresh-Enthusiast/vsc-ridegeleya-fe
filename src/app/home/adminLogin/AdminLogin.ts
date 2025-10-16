@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PublisherRequests } from '../admin/publisher-requests/publisher-requests';
+import { PublisherRequestsadmin } from '../admin/publisher-requests/publisher-requests';
 import { AdminService } from '../../services/admin';
+import { AdminRoutingModule } from "../admin/admin-routing-module";
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, PublisherRequests],
+  imports: [FormsModule, CommonModule, PublisherRequestsadmin, AdminRoutingModule],
   templateUrl: './adminLogin.html',
   styleUrls: ['./adminLogin.css']
 })
@@ -23,6 +26,7 @@ export class AdminLogin {
         next: () => {
           this.isLoggedIn = true;
           alert('Login successful');
+
         },
         error: () => alert('Login failed')
       });

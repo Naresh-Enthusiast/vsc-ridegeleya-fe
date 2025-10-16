@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-
+import { ToastrService } from 'ngx-toastr'
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SignalRService } from '../../services/signal-r';
 
 @Component({
   selector: 'app-login',
@@ -19,13 +20,16 @@ export class LoginComponent implements OnInit {
   showPassword = false;
   errorMessage = '';
   successMessage = '';
-  private apiUrl = 'http://localhost:5205/api/User/login';
+  private apiUrl = 'http://localhost:5205/api/v1/User/login';
 
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  private fb: FormBuilder,
+  private http: HttpClient,
+  private router: Router,
+  private toastr: ToastrService,
+  private signalRService: SignalRService
+) {}
+
 
   ngOnInit(): void {
     this.initializeForm();
@@ -61,17 +65,28 @@ export class LoginComponent implements OnInit {
     this.http.post(this.apiUrl, loginData).subscribe({
       next: (response: any) => {
         // Save userId from backend response
-        if (response.id) {
-          localStorage.setItem('userId', response.id);
+        if (response.user.id) {
+          //print user id in console
+          console.log('User ID:', response.user.id);
+          localStorage.setItem('userId', response.user.id);
+          
+          
+          this.signalRService.startConnection(response.user.id);
+
+  // Listen for notifications
+         this.signalRService.listenForNotifications((message: string) => {
+          this.toastr.info(message, 'Notification');
+  });
         }
 
         // Save token if provided
         if (response.token) {
+          console.log('Auth Token:', response.token);
           localStorage.setItem('authToken', response.token);
         }
 
         // Save user object if provided
-        if (response.user) {
+        if(response.user) {
           localStorage.setItem('userData', JSON.stringify(response.user));
         }
 
@@ -84,6 +99,7 @@ export class LoginComponent implements OnInit {
 
         this.isLoading = false;
         this.successMessage = 'Login successful!';
+        alert('Login successful!');
 
         // Redirect to profile page after login
         this.router.navigate(['/userprofile']);

@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { catchError, of } from 'rxjs';
+import { AdminRoutingModule } from "../admin-routing-module";
+import { RouterLink } from '@angular/router';
 
 interface PublisherRequest {
   publishRequestId: number;
@@ -17,11 +19,11 @@ interface PublisherRequest {
 @Component({
   selector: 'app-publisher-requests',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, AdminRoutingModule, RouterLink],
   templateUrl: './publisher-requests.html',
   styleUrls: ['./publisher-requests.css']
 })
-export class PublisherRequests implements OnInit {
+export class PublisherRequestsadmin implements OnInit {
   requests: PublisherRequest[] = [];
   loading = false;
   selectedImage: string | null = null;
@@ -52,51 +54,48 @@ export class PublisherRequests implements OnInit {
   }
 
   approveRequest(requestId: number): void {
-  if (!confirm('Are you sure you want to approve this request?')) return;
+    if (!confirm('Are you sure you want to approve this request?')) return;
 
-  this.processingId = requestId;
-  this.http.post(`${this.baseUrl}/approve/${requestId}`, {})
-    .pipe(
-      catchError(error => {
-        console.error('Error approving request:', error);
-        alert(`Failed to approve request. Error: ${error.status} - ${error.statusText}`);
-        this.processingId = null;
-        return of(null);
-      })
-    )
-    .subscribe(response => {
-      if (response !== null) {
-        alert('Request approved successfully!');
-        this.processingId = null;
-        // ✅ remove from frontend list immediately
-        this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
-      }
-    });
-}
+    this.processingId = requestId;
+    this.http.post(`${this.baseUrl}/approve/${requestId}`, {})
+      .pipe(
+        catchError(error => {
+          console.error('Error approving request:', error);
+          alert(`Failed to approve request. Error: ${error.status} - ${error.statusText}`);
+          this.processingId = null;
+          return of(null);
+        })
+      )
+      .subscribe(response => {
+        if (response !== null) {
+          alert('Request approved successfully!');
+          this.processingId = null;
+          this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
+        }
+      });
+  }
 
-rejectRequest(requestId: number): void {
-  if (!confirm('Are you sure you want to reject this request?')) return;
+  rejectRequest(requestId: number): void {
+    if (!confirm('Are you sure you want to reject this request?')) return;
 
-  this.processingId = requestId;
-  this.http.post(`${this.baseUrl}/reject/${requestId}`, {})
-    .pipe(
-      catchError(error => {
-        console.error('Error rejecting request:', error);
-        alert(`Failed to reject request. Error: ${error.status} - ${error.statusText}`);
-        this.processingId = null;
-        return of(null);
-      })
-    )
-    .subscribe(response => {
-      if (response !== null) {
-        alert('Request rejected successfully!');
-        this.processingId = null;
-        // ✅ remove from frontend list immediately
-        this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
-      }
-    });
-}
-
+    this.processingId = requestId;
+    this.http.post(`${this.baseUrl}/reject/${requestId}`, {})
+      .pipe(
+        catchError(error => {
+          console.error('Error rejecting request:', error);
+          alert(`Failed to reject request. Error: ${error.status} - ${error.statusText}`);
+          this.processingId = null;
+          return of(null);
+        })
+      )
+      .subscribe(response => {
+        if (response !== null) {
+          alert('Request rejected successfully!');
+          this.processingId = null;
+          this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
+        }
+      });
+  }
 
   viewImage(imageData: string): void {
     this.selectedImage = `data:image/jpeg;base64,${imageData}`;
@@ -107,7 +106,7 @@ rejectRequest(requestId: number): void {
   }
 
   getStatusClass(status: string): string {
-    switch(status) {
+    switch (status) {
       case 'Pending': return 'status-pending';
       case 'Accepted': return 'status-accepted';
       case 'Rejected': return 'status-rejected';

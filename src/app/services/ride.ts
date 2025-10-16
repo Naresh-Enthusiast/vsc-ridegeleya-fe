@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Ride {
-  rideId?: number;      
+
+       
   publisherId?: number; 
   from: string;
   to: string;
@@ -18,7 +19,7 @@ export interface Ride {
   providedIn: 'root'
 })
 export class RideService {
-  private apiUrl = 'http://localhost:5205/api/Ride';
+  private apiUrl = 'http://localhost:5205/api/v1/Ride';
 
   constructor(private http: HttpClient) {}
 

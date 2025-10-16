@@ -5,11 +5,13 @@ import { NavbarComponent } from './navbar/navbar';
 import { LoginComponent } from "../profile/login/login";
 import { RideService } from '../services/ride.service'; // ✅ import service
 import { HttpClientModule } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent, LoginComponent, HttpClientModule],
+  imports: [CommonModule, FormsModule, NavbarComponent, LoginComponent, HttpClientModule,RouterLink],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -35,7 +37,9 @@ export class HomeComponent {
   errorMessage: string = '';
   hasSearched: boolean = false; 
 
-  constructor(private rideService: RideService) {
+  constructor(private rideService: RideService, private router: Router) {}
+
+  ngOnInit() {
     window.addEventListener('openLoginModal', () => {
       this.showLoginModal = true;
     });
@@ -97,6 +101,12 @@ export class HomeComponent {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
   }
   bookRide(ride: any) {
+  if(!localStorage.getItem('userId')) {
+    alert('Please log in to book a ride.');
+    this.router.navigate(['/login']);
+    this.showLoginModal = true;
+    return;
+  }
   console.log('Booking ride:', ride);
   alert(`Booking confirmed for ride from ${ride.from || ride.From} to ${ride.to || ride.To}!`);
 }

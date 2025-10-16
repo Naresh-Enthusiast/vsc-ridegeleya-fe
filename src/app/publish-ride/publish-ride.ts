@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class PublishRideComponent {
   ride: Ride = {
+    publisherId:0,
     from: '',
     to: '',
     date: '',

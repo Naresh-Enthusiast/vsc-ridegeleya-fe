@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class RideService {
   // Replace with your actual API URL
-  private apiUrl = 'http://localhost:5205/api/User/availability'; // Update this URL
+  private apiUrl = 'http://localhost:5205/api/v1/User/availability'; // Update this URL
 
   constructor(private http: HttpClient) {}
 

@@ -3,6 +3,9 @@
 
   <form (ngSubmit)="postRide()" #rideForm="ngForm" class="publish-form">
 
+    <label>publisherid</label>
+    <input type="number" [(ngModel)]="ride.publisherId" name="from" placeholder="Enter starting location" required />
+
     <label>From</label>
     <input type="text" [(ngModel)]="ride.from" name="from" placeholder="Enter starting location" required />
 
