@@ -8,7 +8,7 @@ import { PublisherRequest } from '../publish-request/publish-request';
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [CommonModule, PublisherRequest, FormsModule, PublisherRequest],
+  imports: [CommonModule, PublisherRequest, FormsModule],
   templateUrl: './AdminLogin.html',
   styleUrls: ['./AdminLogin.css']
 })

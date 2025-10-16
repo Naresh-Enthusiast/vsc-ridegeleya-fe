@@ -6,13 +6,15 @@ import { RegistrationComponent } from "./profile/registartion";
 import { LoginComponent } from './profile/login/login';
 import { AdminLogin } from './home/adminLogin/AdminLogin';
 import { FormsModule } from '@angular/forms';
-import { PublisherRequestComponent } from './home/publish-request/publish-request';
+import { PublisherRequest } from './home/publish-request/publish-request';
 import { OtpVerify } from './otp-verify/otp-verify';
 import { ProfileComponent } from './profile/userprofile/userprofile';
 import { PublishRideComponent } from './publish-ride/publish-ride';
 import { AuthGuard } from './guards/auth-guard';
 import { Approved } from './home/admin/approved/approved';
 
+import { PublisherRequestsadmin } from './home/admin/publisher-requests/publisher-requests';
+import {BookingDetails} from './home/booking-detail/booking-detail';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -21,12 +23,24 @@ export const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   {path:'login',component:LoginComponent},
   {path:'AdminLogin',component:AdminLogin},
-  {path:'PublisherRequest',component:PublisherRequestComponent},
-  {path:'otp-verify',component:OtpVerify},
   {path:'userprofile',component:ProfileComponent},
   {path:'appoved',component:Approved},
   { path: 'admin',loadChildren: () =>import('./home/admin/admin-module').then(m => m.AdminModule)},
-  { path: 'publish-ride', component: PublishRideComponent, canActivate: [AuthGuard] }
+  { path: 'publish-ride', component: PublishRideComponent, canActivate: [AuthGuard] },
+    {path:'PublisherRequest',component:PublisherRequest},
+  {path:'otp-verify',component:OtpVerify},
+  {path:'publisher-requests',component:PublisherRequestsadmin, canActivate:[AuthGuard]},
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home').then(m => m.HomeComponent)
+  },
+  {path:'about', loadComponent: () => import('./about/about').then(m => m.About)},
+  {path:'booking-detail', loadComponent: () => import('./home/booking-detail/booking-detail').then(m => m.BookingDetails)},
+  {
+  path: 'booking-details',
+  loadComponent: () =>
+    import('./home/booking-detail/booking-detail').then((m) => m.BookingDetails)
+}
 ];
 
 @NgModule({

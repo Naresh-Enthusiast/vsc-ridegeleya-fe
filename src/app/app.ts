@@ -42,3 +42,4 @@ export class App implements OnInit, OnDestroy {
     this.signalRService.stopConnection();
   }
 }
+

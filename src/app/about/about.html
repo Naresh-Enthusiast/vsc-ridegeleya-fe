@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="bg-elements">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="content">
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1>🚗 About RideGeleya</h1>
+      <p>
+        RideGeleya is a smart, real-time ride-sharing platform connecting passengers and publishers 
+        with seamless, secure, and scalable technology. Built with cutting-edge web architecture for 
+        the future of mobility.
+      </p>
+    </div>
+
+    <!-- Mission & Vision Section -->
+    <div class="mv-grid">
+      <div 
+        *ngFor="let item of missionVision" 
+        class="card {{ item.type }}"
+        [@fadeInUp]
+      >
+        <div class="card-content">
+          <h2>{{ item.icon }} {{ item.title }}</h2>
+          <p>{{ item.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tech Stack Section -->
+    <div class="tech-section" [@fadeInUp]>
+      <h2>⚙️ Built With</h2>
+      <div class="tech-tags">
+        <span 
+          *ngFor="let tech of techStack; let i = index" 
+          class="tech-tag"
+          (click)="onTechTagClick(tech)"
+          [@staggerItem]="i"
+          role="button"
+          tabindex="0"
+        >
+          {{ tech }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="team-section" [@fadeInUp]>
+      <h2>👩‍💻 The Team Behind RideGeleya</h2>
+      <p class="team-intro">
+        A passionate group of developers, designers, and dreamers dedicated to building 
+        the future of mobility.
+      </p>
+
+      <div class="team-grid">
+        <div 
+          *ngFor="let member of teamMembers; let i = index" 
+          class="team-member"
+          (click)="onTeamMemberClick(member)"
+          [@staggerItem]="i"
+          role="button"
+          tabindex="0"
+        >
+          <div class="team-info">
+            <div class="team-name">{{ member.name }}</div>
+            <div class="team-role" [style.color]="member.roleColor">
+              {{ member.role }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

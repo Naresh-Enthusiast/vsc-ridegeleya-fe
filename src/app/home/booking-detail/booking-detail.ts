@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./booking-detail.css'],
 })
 export class BookingDetails {
-  @Input() ride: any; // Passed from ride list
+  @Input()  ride: any; // Passed from ride list
   seatsToBook: number = 1;
   bookingInProgress = false;
 
