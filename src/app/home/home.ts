@@ -3,10 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar';
 import { LoginComponent } from "../profile/login/login";
-import { RideService } from '../services/ride.service'; // ✅ import service
+import { RideService } from '../services/ride.service';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +16,6 @@ import { CanActivate, Router } from '@angular/router';
   styleUrls: ['./home.css']
 })
 export class HomeComponent {
-
   rideQuery = {
     from: '',
     to: '',
@@ -35,7 +34,7 @@ export class HomeComponent {
   showLoginModal = false;
   rides: any[] = [];
   errorMessage: string = '';
-  hasSearched: boolean = false; 
+  hasSearched = false;
 
   constructor(private rideService: RideService, private router: Router) {}
 
@@ -69,7 +68,6 @@ export class HomeComponent {
     else this.filteredToLocations = filtered;
   }
 
-  
   searchRides() {
     this.hasSearched = true;
     this.errorMessage = '';
@@ -92,7 +90,6 @@ export class HomeComponent {
     });
   }
 
-  // Helper methods for displaying key-value pairs
   getRideKeys(ride: any): string[] {
     return Object.keys(ride);
   }
@@ -100,6 +97,8 @@ export class HomeComponent {
   formatKey(key: string): string {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
   }
+
+  // 🚗 Navigate to Booking Details
   bookRide(ride: any) {
   if(!localStorage.getItem('userId')) {
     alert('Please log in to book a ride.');
@@ -109,6 +108,7 @@ export class HomeComponent {
   }
   console.log('Booking ride:', ride);
   alert(`Booking confirmed for ride from ${ride.from || ride.From} to ${ride.to || ride.To}!`);
+  this.router.navigate(['/booking-details'], { state: { ride } });
 }
 
 }

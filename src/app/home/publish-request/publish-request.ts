@@ -11,7 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './publish-request.html',
   styleUrl: './publish-request.css'
 })
-export class PublisherRequestComponent implements OnInit {
+export class PublisherRequest implements OnInit {
   publisherForm: FormGroup;
   isSubmitting = false;
   userId: number = 0;

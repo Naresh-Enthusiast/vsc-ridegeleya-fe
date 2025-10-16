@@ -46,7 +46,9 @@
               <p><strong>{{ formatKey(key) }}:</strong> {{ ride[key] }}</p>
             </div>
             <div class="ride-footer">
-              <button class="book-btn" (click)="bookRide(ride)">Book Now</button>
+              <button class="book-btn hover:scale-105 transition-all duration-200" (click)="bookRide(ride)">
+                🚗 Book Now
+              </button>
             </div>
           </div>
         </div>
@@ -82,6 +84,8 @@
     </div>
   </div>
 </div>
+
+
 
 <div class="modal-backdrop" *ngIf="showLoginModal">
   <div class="modal-content">

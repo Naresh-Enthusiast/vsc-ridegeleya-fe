@@ -1,76 +1,30 @@
-/* Full page background */
-.login-container, .logged-in-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Login card */
-.login-card {
-  background: #ffffff;
-  padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  width: 350px;
+.admin-login-container {
+  width: 300px;
+  margin: 80px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.login-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
-}
-
-.login-card h2 {
-  margin-bottom: 30px;
-  color: #333;
-}
-
-/* Input styling */
-.input-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.input-group input {
+.admin-login-container input {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  outline: none;
-  font-size: 14px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-group input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-}
-
-/* Button styling */
-button {
+.admin-login-container button {
   width: 100%;
-  padding: 12px;
-  background-color: #667eea;
-  color: white;
+  padding: 10px;
+  background-color: #0078d7;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  color: white;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #5a67d8;
-}
-
-/* Logged-in container styling */
-.logged-in-container {
-  background: #f5f5f5;
-  width: 100%;
-  min-height: 100vh;
-  padding: 40px 20px;
+.admin-login-container button:hover {
+  background-color: #005fa3;
 }

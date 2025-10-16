@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent} from './dashboard/dashboard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
+  {path : 'publisher-requests', loadComponent: () => import('../admin/publisher-requests/publisher-requests').then(m => m.PublisherRequestsadmin)}
 ];
 
 @NgModule({

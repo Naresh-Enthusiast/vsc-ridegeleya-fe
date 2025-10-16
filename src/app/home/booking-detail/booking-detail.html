@@ -1,0 +1,82 @@
+<div class="booking-page">
+  <div class="header fade-in">
+    <h1 class="text-3xl font-bold text-center text-gray-800">
+      🚗 Ride Booking Summary
+    </h1>
+  </div>
+
+  <!-- Driver Details -->
+  <section class="card fade-in hover-lift">
+    <h2 class="section-title">👨‍✈️ Driver Details</h2>
+    <p><strong>Name:</strong> {{ ride?.publisherName || 'John Doe' }}</p>
+    <p><strong>Contact:</strong> {{ ride?.phone || '+91 9876543210' }}</p>
+    <p><strong>Rating:</strong> ⭐⭐⭐⭐☆</p>
+  </section>
+
+  <!-- Ride Details -->
+  <section class="card fade-in hover-lift">
+    <h2 class="section-title">🛣️ Ride Details</h2>
+    <p><strong>From:</strong> {{ ride?.from }}</p>
+    <p><strong>To:</strong> {{ ride?.to }}</p>
+    <p><strong>Date:</strong> {{ ride?.date | date }}</p>
+    <p><strong>Time:</strong> {{ ride?.startTime }}</p>
+    <p><strong>Available Seats:</strong> {{ ride?.availableSeats }}</p>
+
+    <label class="block mt-3 font-medium text-gray-700">
+      Select Seats:
+      <input
+        type="number"
+        min="1"
+        [max]="ride?.availableSeats"
+        [value]="seatsToBook"
+        (input)="seatsToBook = $any($event.target).valueAsNumber"
+        class="mt-1 p-2 border border-gray-300 rounded-lg w-24"
+      />
+    </label>
+
+    <p class="mt-3 text-lg font-semibold text-green-700">
+      💰 Amount: ₹{{ ride?.amount * seatsToBook }}
+    </p>
+
+    <button
+      (click)="bookRide()"
+      [disabled]="bookingInProgress"
+      class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl transition-transform transform hover:scale-105"
+    >
+      {{ bookingInProgress ? 'Booking...' : 'Confirm Booking' }}
+    </button>
+  </section>
+
+  <!-- Ride Tracking -->
+  <section class="card fade-in hover-lift">
+    <h2 class="section-title">📍 Ride Tracking</h2>
+    <div class="tracking-map bg-gray-100 rounded-lg flex items-center justify-center">
+      <p class="text-gray-500">🗺️ Map view coming soon...</p>
+    </div>
+    <button
+      class="mt-3 w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2 px-4 rounded-xl transition-transform transform hover:scale-105"
+    >
+      Track Ride
+    </button>
+  </section>
+
+  <!-- Emergency -->
+  <section class="card fade-in hover-lift">
+    <h2 class="section-title text-red-600">🚨 Emergency</h2>
+    <button
+      class="mt-3 w-full bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-xl text-lg font-semibold transition-transform transform hover:scale-105"
+    >
+      Emergency SOS
+    </button>
+  </section>
+
+  <!-- Back to Home -->
+  <div class="footer">
+    <button
+      (click)="goHome()"
+      class="bg-gray-800 hover:bg-gray-900 text-white py-2 px-6 rounded-lg shadow-lg"
+    >
+      ⬅️ Back to Home
+    </button>
+  </div>
+</div>

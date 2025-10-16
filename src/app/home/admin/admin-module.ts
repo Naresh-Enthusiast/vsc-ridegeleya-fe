@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing-module';
-import { DashboardComponent } from './dashboard/dashboard';
-import { HttpClientModule } from '@angular/common/http';
+import { PublisherRequest } from '../publish-request/publish-request';
 
 
 @NgModule({
@@ -10,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     CommonModule,
     AdminRoutingModule,
-    DashboardComponent,
+    PublisherRequest
   ]
 })
 

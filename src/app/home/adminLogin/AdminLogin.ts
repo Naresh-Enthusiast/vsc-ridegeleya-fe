@@ -1,34 +1,66 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { PublisherRequestsadmin } from '../admin/publisher-requests/publisher-requests';
-import { AdminService } from '../../services/admin';
-import { AdminRoutingModule } from "../admin/admin-routing-module";
-import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { PublisherRequest } from '../publish-request/publish-request';
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, PublisherRequestsadmin, AdminRoutingModule],
-  templateUrl: './adminLogin.html',
-  styleUrls: ['./adminLogin.css']
+  imports: [CommonModule, PublisherRequest, FormsModule, PublisherRequest],
+  templateUrl: './AdminLogin.html',
+  styleUrls: ['./AdminLogin.css']
 })
 export class AdminLogin {
-  username = '';
-  password = '';
-  isLoggedIn = false;
+  username: string = '';
+  otp: string = '';
+  otpSent = false;
 
-  constructor(private adminService: AdminService) {}
+  private baseUrl = 'http://localhost:5205/api/v1/Admin';
 
-  login() {
-    this.adminService.login({ username: this.username, password: this.password })
+  // constructor(private http: HttpClient) {}
+
+    constructor(private http: HttpClient, private router: Router) {}
+
+  sendOtp() {
+    if (!this.username) {
+      alert('Please enter your email.');
+      return;
+    }
+
+    this.http.post(`${this.baseUrl}/send-otp`, { email: this.username }, { responseType: 'text' })
       .subscribe({
-        next: () => {
-          this.isLoggedIn = true;
-          alert('Login successful');
-
+        next: res => {
+          alert('OTP sent successfully!');
+          this.otpSent = true;
         },
-        error: () => alert('Login failed')
+        error: err => {
+          console.error('Error sending OTP:', err);
+          alert('Failed to send OTP. Please check your email and try again.');
+        }
       });
   }
+
+  verifyOtp() {
+  if (!this.otp) {
+    alert('Please enter the OTP.');
+    return;
+  }
+
+  this.http.post(`${this.baseUrl}/verify-otp`, { Username: this.username, OTP: this.otp }, { responseType: 'text' })
+    .subscribe({
+      next: res => {
+        alert('OTP verified successfully! Login successful.');
+        localStorage.setItem('adminEmail', this.username); // for AuthGuard
+        console.log('Navigating to publisher requests...');
+        this.router.navigate(['admin/publisher-requests']);
+      },
+      error: err => {
+        console.error('Error verifying OTP:', err);
+        alert('Invalid OTP. Please try again.');
+      }
+    }); 
+  }
 }
+

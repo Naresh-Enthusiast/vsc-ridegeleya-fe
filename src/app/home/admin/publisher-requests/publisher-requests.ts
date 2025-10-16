@@ -29,7 +29,7 @@ export class PublisherRequestsadmin implements OnInit {
   selectedImage: string | null = null;
   processingId: number | null = null;
 
-  private baseUrl = 'http://localhost:5205/api/Admin';
+  private baseUrl = 'http://localhost:5205/api/v1/Admin';
 
   constructor(private http: HttpClient) {}
 

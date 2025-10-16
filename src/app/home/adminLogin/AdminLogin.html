@@ -1,17 +1,22 @@
-<div class="login-container" *ngIf="!isLoggedIn">
-  <div class="login-card">
-    <h2>Admin Login</h2>
-    <div class="input-group">
-      <input [(ngModel)]="username" placeholder="Username" />
-    </div>
-    <div class="input-group">
-      <input [(ngModel)]="password" placeholder="Password" type="password" />
-    </div>
-    <button (click)="login()">Login</button>
-  
-  </div>
-</div>
+<div class="admin-login-container">
+  <h2>Admin Login</h2>
 
-<div *ngIf="isLoggedIn" class="logged-in-container">
-  <app-publisher-requests></app-publisher-requests>
+  <div *ngIf="!otpSent">
+    <input
+      [(ngModel)]="username"
+      type="email"
+      placeholder="Enter your email"
+    />
+    <button (click)="sendOtp()">Send OTP</button>
+  </div>
+
+  <div *ngIf="otpSent">
+    <input
+      [(ngModel)]="otp"
+      type="text"
+      placeholder="Enter OTP"
+    />
+    <button (click)="verifyOtp()">Verify OTP</button>
+
+  </div>
 </div>
