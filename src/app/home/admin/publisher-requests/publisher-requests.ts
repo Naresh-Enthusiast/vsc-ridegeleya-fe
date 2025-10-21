@@ -4,8 +4,10 @@ import { Component, OnInit } from '@angular/core';
 import { catchError, of } from 'rxjs';
 import { AdminRoutingModule } from "../admin-routing-module";
 import { RouterLink } from '@angular/router';
+import { SignalRService } from '../../../services/signal-r';
+import { SignalRServices } from '../../../services/signalr.service';
 
-interface PublisherRequest {
+export interface PublisherRequest {
   publishRequestId: number;
   userId: number;
   license_Number: string;
@@ -31,10 +33,27 @@ export class PublisherRequestsadmin implements OnInit {
 
   private baseUrl = 'http://localhost:5205/api/v1/Admin';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private signalRService : SignalRServices
+  ) {}
 
   ngOnInit(): void {
     this.loadRequests();
+
+    // Start SignalR connection
+    this.signalRService.startConnection();
+
+    // Listen for real-time updates
+    this.signalRService.onPublisherApproved((requestId) => {
+      console.log(`Publisher request ${requestId} approved`);
+      this.updateRequestStatus(requestId, 'Accepted');
+    });
+
+    this.signalRService.onPublisherRejected((requestId) => {
+      console.log(`Publisher request ${requestId} rejected`);
+      this.updateRequestStatus(requestId, 'Rejected');
+    });
   }
 
   loadRequests(): void {
@@ -52,7 +71,6 @@ export class PublisherRequestsadmin implements OnInit {
         this.loading = false;
       });
   }
-
   approveRequest(requestId: number): void {
     if (!confirm('Are you sure you want to approve this request?')) return;
 
@@ -70,7 +88,7 @@ export class PublisherRequestsadmin implements OnInit {
         if (response !== null) {
           alert('Request approved successfully!');
           this.processingId = null;
-          this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
+          this.updateRequestStatus(requestId, 'Accepted');
         }
       });
   }
@@ -92,11 +110,12 @@ export class PublisherRequestsadmin implements OnInit {
         if (response !== null) {
           alert('Request rejected successfully!');
           this.processingId = null;
-          this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
+          this.updateRequestStatus(requestId, 'Rejected');
         }
       });
   }
 
+  
   viewImage(imageData: string): void {
     this.selectedImage = `data:image/jpeg;base64,${imageData}`;
   }
@@ -112,5 +131,13 @@ export class PublisherRequestsadmin implements OnInit {
       case 'Rejected': return 'status-rejected';
       default: return '';
     }
+  }
+
+  private updateRequestStatus(requestId: number, status: 'Accepted' | 'Rejected'): void {
+    const index = this.requests.findIndex(r => r.publishRequestId === requestId);
+    if (index !== -1) {
+      this.requests[index].status = status;
+    }
+    
   }
 }

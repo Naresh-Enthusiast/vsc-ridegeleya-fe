@@ -1,6 +1,7 @@
 <div class="publisher-requests-container">
   <div class="header-section">
     <h2>Publisher Requests</h2>
+
     <button class="refresh-btn" (click)="loadRequests()" [disabled]="loading">
       <span *ngIf="!loading">🔄 Refresh</span>
       <span *ngIf="loading">⏳ Loading...</span>
@@ -14,9 +15,9 @@
 
 
 
-<div>
-  <a routerLink="/appoved">Approved Publishers</a>
-</div>
+  <div>
+    <a routerLink="/appoved">Approved Publishers</a>
+  </div>
 
 
 
@@ -42,23 +43,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let req of requests" 
-            [class.processing]="processingId === req.publishRequestId"
-            class="fade-row">
+        <tr *ngFor="let req of requests" [class.processing]="processingId === req.publishRequestId" class="fade-row">
           <td>{{ req.publishRequestId }}</td>
           <td>{{ req.userId }}</td>
           <td>{{ req.license_Number }}</td>
           <td>
-            <img [src]="'data:image/jpeg;base64,' + req.license_Photo"
-                 alt="License" 
-                 class="doc-photo"
-                 (click)="viewImage(req.license_Photo)"/>
+            <img [src]="'data:image/jpeg;base64,' + req.license_Photo" alt="License" class="doc-photo"
+              (click)="viewImage(req.license_Photo)" />
           </td>
           <td>
-            <img [src]="'data:image/jpeg;base64,' + req.rcBook_Photo"
-                 alt="RC Book" 
-                 class="doc-photo"
-                 (click)="viewImage(req.rcBook_Photo)"/>
+            <img [src]="'data:image/jpeg;base64,' + req.rcBook_Photo" alt="RC Book" class="doc-photo"
+              (click)="viewImage(req.rcBook_Photo)" />
           </td>
           <td>{{ req.vehicle_Model }}</td>
           <td>
@@ -74,15 +69,13 @@
             }">{{ req.status }}</span>
           </td>
           <td class="actions-cell">
-            <button class="approve-btn" 
-                    (click)="approveRequest(req.publishRequestId)"
-                    [disabled]="req.status !== 'Pending' || processingId === req.publishRequestId">
+            <button class="approve-btn" (click)="approveRequest(req.publishRequestId)"
+              [disabled]="req.status !== 'Pending' || processingId === req.publishRequestId">
               <span *ngIf="processingId !== req.publishRequestId">✓ Approve</span>
               <span *ngIf="processingId === req.publishRequestId">⏳</span>
             </button>
-            <button class="reject-btn" 
-                    (click)="rejectRequest(req.publishRequestId)"
-                    [disabled]="req.status !== 'Pending' || processingId === req.publishRequestId">
+            <button class="reject-btn" (click)="rejectRequest(req.publishRequestId)"
+              [disabled]="req.status !== 'Pending' || processingId === req.publishRequestId">
               <span *ngIf="processingId !== req.publishRequestId">✕ Reject</span>
               <span *ngIf="processingId === req.publishRequestId">⏳</span>
             </button>
