@@ -35,24 +35,23 @@ export class PublisherRequestsadmin implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private signalRService : SignalRServices
+    private signalRService: SignalRServices
   ) {}
 
   ngOnInit(): void {
     this.loadRequests();
-
-    // Start SignalR connection
     this.signalRService.startConnection();
 
-    // Listen for real-time updates
-    this.signalRService.onPublisherApproved((requestId) => {
-      console.log(`Publisher request ${requestId} approved`);
-      this.updateRequestStatus(requestId, 'Accepted');
+    // 🔔 Listen for real-time approval notifications
+    this.signalRService.onPublisherApproved((requestId: number) => {
+      console.log('✅ Received real-time approval for ID:', requestId);
+      alert(`Request #${requestId} was approved in real-time!`);
     });
 
-    this.signalRService.onPublisherRejected((requestId) => {
-      console.log(`Publisher request ${requestId} rejected`);
-      this.updateRequestStatus(requestId, 'Rejected');
+    // 🔔 Listen for real-time rejection notifications
+    this.signalRService.onPublisherRejected((requestId: number) => {
+      console.log('❌ Received real-time rejection for ID:', requestId);
+      alert(`Request #${requestId} was rejected in real-time!`);
     });
   }
 
@@ -71,6 +70,7 @@ export class PublisherRequestsadmin implements OnInit {
         this.loading = false;
       });
   }
+
   approveRequest(requestId: number): void {
     if (!confirm('Are you sure you want to approve this request?')) return;
 
@@ -88,7 +88,7 @@ export class PublisherRequestsadmin implements OnInit {
         if (response !== null) {
           alert('Request approved successfully!');
           this.processingId = null;
-          this.updateRequestStatus(requestId, 'Accepted');
+          this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
         }
       });
   }
@@ -110,12 +110,11 @@ export class PublisherRequestsadmin implements OnInit {
         if (response !== null) {
           alert('Request rejected successfully!');
           this.processingId = null;
-          this.updateRequestStatus(requestId, 'Rejected');
+          this.requests = this.requests.filter(r => r.publishRequestId !== requestId);
         }
       });
   }
 
-  
   viewImage(imageData: string): void {
     this.selectedImage = `data:image/jpeg;base64,${imageData}`;
   }
@@ -133,11 +132,10 @@ export class PublisherRequestsadmin implements OnInit {
     }
   }
 
-  private updateRequestStatus(requestId: number, status: 'Accepted' | 'Rejected'): void {
-    const index = this.requests.findIndex(r => r.publishRequestId === requestId);
-    if (index !== -1) {
-      this.requests[index].status = status;
-    }
-    
+  // 🧪 TEST — send dummy notification manually to check SignalR
+  sendTestNotification(): void {
+    this.signalRService.sendNotification('This is a test notification from Admin!');
+    console.log('📨 Test notification sent!');
+    alert('Test notification sent! Check your console or user page.');
   }
 }
