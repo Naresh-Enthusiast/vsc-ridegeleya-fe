@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   private http: HttpClient,
   private router: Router,
   private toastr: ToastrService,
-  private signalRService: SignalRService
+  private signalRServices: SignalRService
 ) {}
 
 
@@ -71,12 +71,12 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('userId', response.user.id);
           
           
-          this.signalRService.startConnection(response.user.id);
+          this.signalRServices.startConnection(response.user.id);
 
   // Listen for notifications
-         this.signalRService.listenForNotifications((message: string) => {
-          this.toastr.info(message, 'Notification');
-  });
+  //        this.signalRServices.listenForNotifications((message: string) => {
+  //         this.toastr.info(message, 'Notification');
+  // });
         }
 
         // Save token if provided

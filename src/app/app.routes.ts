@@ -12,7 +12,7 @@ import { ProfileComponent } from './profile/userprofile/userprofile';
 import { PublishRideComponent } from './publish-ride/publish-ride';
 import { AuthGuard } from './guards/auth-guard';
 import { Approved } from './home/admin/approved/approved';
-
+import { ForgotPassword } from './home/passwordreset/passwordreset'; 
 import { PublisherRequestsadmin } from './home/admin/publisher-requests/publisher-requests';
 import {BookingDetails} from './home/booking-detail/booking-detail';
 
@@ -23,12 +23,15 @@ export const routes: Routes = [
   { path: 'register', component: RegistrationComponent },
   {path:'login',component:LoginComponent},
   {path:'AdminLogin',component:AdminLogin},
+  {path:'PublisherRequest',component:PublisherRequest},
+  {path:'otp-verify',component:OtpVerify},
   {path:'userprofile',component:ProfileComponent},
   {path:'appoved',component:Approved},
   { path: 'admin',loadChildren: () =>import('./home/admin/admin-module').then(m => m.AdminModule)},
   { path: 'publish-ride', component: PublishRideComponent, canActivate: [AuthGuard] },
     {path:'PublisherRequest',component:PublisherRequest},
   {path:'otp-verify',component:OtpVerify},
+  {path:'password-reset',component:ForgotPassword},
   {path:'publisher-requests',component:PublisherRequestsadmin, canActivate:[AuthGuard]},
   {
     path: 'home',

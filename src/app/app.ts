@@ -21,7 +21,6 @@ export class App implements OnInit, OnDestroy {
     private signalRService: SignalRService,
     private toastr: ToastrService
   ) {}
-
   ngOnInit(): void {
     // Get logged-in userId from localStorage
     this.userId = Number(localStorage.getItem('userId'));
@@ -29,11 +28,13 @@ export class App implements OnInit, OnDestroy {
       // Start SignalR connection
       this.signalRService.startConnection(this.userId);
 
+      
+
       // Listen for notifications
-      this.signalRService.listenForNotifications((message: string) => {
-        // Show toastr popup
-        this.toastr.info(message, 'Notification');
-      });
+      // this.signalRService.listenForNotifications((message: string) => {
+      //   // Show toastr popup
+      //   this.toastr.info(message, 'Notification');
+      // });
     }
   }
 

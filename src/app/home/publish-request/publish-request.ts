@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-publish-request',
@@ -23,7 +24,7 @@ export class PublisherRequest implements OnInit {
 
   private apiUrl = 'http://localhost:5205/api/v1/PublisherRequest/apply';
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient,private toastr: ToastrService) {
     this.publisherForm = this.fb.group({
       publisherId: [0],
       userId: ['', Validators.required],   // will be filled automatically
@@ -42,6 +43,8 @@ export class PublisherRequest implements OnInit {
       // ✅ set it in the form automatically
       this.publisherForm.patchValue({ userId: this.userId });
     }
+   
+    
   }
 
   onLicensePhotoSelect(event: Event): void {

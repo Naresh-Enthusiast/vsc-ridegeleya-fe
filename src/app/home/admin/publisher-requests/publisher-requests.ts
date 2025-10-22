@@ -4,9 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { catchError, of } from 'rxjs';
 import { AdminRoutingModule } from "../admin-routing-module";
 import { RouterLink } from '@angular/router';
-import { SignalRService } from '../../../services/signal-r';
-import { SignalRServices } from '../../../services/signalr.service';
 
+ 
 export interface PublisherRequest {
   publishRequestId: number;
   userId: number;
@@ -17,7 +16,7 @@ export interface PublisherRequest {
   vehicle_Model: string;
   status: 'Pending' | 'Accepted' | 'Rejected';
 }
-
+ 
 @Component({
   selector: 'app-publisher-requests',
   standalone: true,
@@ -30,31 +29,18 @@ export class PublisherRequestsadmin implements OnInit {
   loading = false;
   selectedImage: string | null = null;
   processingId: number | null = null;
-
+ 
   private baseUrl = 'http://localhost:5205/api/v1/Admin';
-
+ 
   constructor(
-    private http: HttpClient,
-    private signalRService: SignalRServices
+    private http: HttpClient
   ) {}
-
+ 
   ngOnInit(): void {
     this.loadRequests();
-    this.signalRService.startConnection();
 
-    // 🔔 Listen for real-time approval notifications
-    this.signalRService.onPublisherApproved((requestId: number) => {
-      console.log('✅ Received real-time approval for ID:', requestId);
-      alert(`Request #${requestId} was approved in real-time!`);
-    });
-
-    // 🔔 Listen for real-time rejection notifications
-    this.signalRService.onPublisherRejected((requestId: number) => {
-      console.log('❌ Received real-time rejection for ID:', requestId);
-      alert(`Request #${requestId} was rejected in real-time!`);
-    });
   }
-
+ 
   loadRequests(): void {
     this.loading = true;
     this.http.get<PublisherRequest[]>(`${this.baseUrl}/publisher-requests`)
@@ -70,10 +56,10 @@ export class PublisherRequestsadmin implements OnInit {
         this.loading = false;
       });
   }
-
+ 
   approveRequest(requestId: number): void {
     if (!confirm('Are you sure you want to approve this request?')) return;
-
+ 
     this.processingId = requestId;
     this.http.post(`${this.baseUrl}/approve/${requestId}`, {})
       .pipe(
@@ -92,10 +78,10 @@ export class PublisherRequestsadmin implements OnInit {
         }
       });
   }
-
+ 
   rejectRequest(requestId: number): void {
     if (!confirm('Are you sure you want to reject this request?')) return;
-
+ 
     this.processingId = requestId;
     this.http.post(`${this.baseUrl}/reject/${requestId}`, {})
       .pipe(
@@ -114,15 +100,15 @@ export class PublisherRequestsadmin implements OnInit {
         }
       });
   }
-
+ 
   viewImage(imageData: string): void {
     this.selectedImage = `data:image/jpeg;base64,${imageData}`;
   }
-
+ 
   closeImage(): void {
     this.selectedImage = null;
   }
-
+ 
   getStatusClass(status: string): string {
     switch (status) {
       case 'Pending': return 'status-pending';
@@ -131,11 +117,7 @@ export class PublisherRequestsadmin implements OnInit {
       default: return '';
     }
   }
-
-  // 🧪 TEST — send dummy notification manually to check SignalR
-  sendTestNotification(): void {
-    this.signalRService.sendNotification('This is a test notification from Admin!');
-    console.log('📨 Test notification sent!');
-    alert('Test notification sent! Check your console or user page.');
-  }
+ 
 }
+ 
+ 
