@@ -14,7 +14,7 @@ import { AuthGuard } from './guards/auth-guard';
 import { Approved } from './home/admin/approved/approved';
 import { ForgotPassword } from './home/passwordreset/passwordreset'; 
 import { PublisherRequestsadmin } from './home/admin/publisher-requests/publisher-requests';
-import {BookingDetails} from './home/booking-detail/booking-detail';
+import { Contact } from './contact/contact';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -43,7 +43,8 @@ export const routes: Routes = [
   path: 'booking-details',
   loadComponent: () =>
     import('./home/booking-detail/booking-detail').then((m) => m.BookingDetails)
-}
+},
+{path: 'Contact', component:Contact}
 ];
 
 @NgModule({

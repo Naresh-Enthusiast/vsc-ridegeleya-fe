@@ -8,7 +8,7 @@
   <div class="nav-middle">
     <a routerLink="/home">Home</a>
     <a routerLink="/about" routerLinkActive="text-cyan-400" class="hover:text-cyan-300 transition">About</a>
-    <a routerLink="/contact">Contact</a>
+    <a routerLink="/Contact">Contact</a>
   </div>
 
   <!-- Right -->
@@ -16,7 +16,7 @@
     <button class="publish-btn" routerLink="/create">Publish a Ride</button>
 
 
-    
+
     <!-- Conditional Login/Profile -->
     <ng-container *ngIf="!isLoggedIn; else profileTemplate">
       <button class="icon-btn" routerLink="/login"> Login</button>
@@ -26,7 +26,7 @@
       <a routerLink="/userprofile">
         👤
       </a>
-     
+
     </ng-template>
 
     <!-- <button class="icon-btn" routerLink="/AdminLogin">Admin</button>  ===/AdminLogin -->
