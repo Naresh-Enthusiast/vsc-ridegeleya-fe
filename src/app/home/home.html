@@ -54,6 +54,20 @@
         </div>
       </div>
     </div>
+    <!-- 🧩 Booking Request Popup -->
+<div class="booking-request-modal" *ngIf="incomingBooking">
+  <div class="modal-content">
+    <h3>🚗 New Booking Request</h3>
+    <p><strong>Ride ID:</strong> {{ incomingBooking.rideId }}</p>
+    <p><strong>User ID:</strong> {{ incomingBooking.userId }}</p>
+    <p>Do you want to accept this booking?</p>
+
+    <div class="modal-buttons">
+      <button class="accept-btn" (click)="respondToBooking('Accepted')">✅ Accept</button>
+      <button class="reject-btn" (click)="respondToBooking('Rejected')">❌ Reject</button>
+    </div>
+  </div>
+</div>
 
 
     <!-- ❌ Error Message (if API error occurs) -->

@@ -1,21 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar';
 import { LoginComponent } from "../profile/login/login";
 import { RideService } from '../services/ride.service';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
-import { Router } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { SignalRServices } from '../services/signalr.service'; 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent, LoginComponent, HttpClientModule,RouterLink],
+  imports: [CommonModule, FormsModule, NavbarComponent, LoginComponent, HttpClientModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+
+  
+  userId: number = 0;
+  incomingBooking: any = null;
+
   rideQuery = {
     from: '',
     to: '',
@@ -34,13 +38,57 @@ export class HomeComponent {
   showLoginModal = false;
   rides: any[] = [];
   errorMessage: string = '';
-  hasSearched = false;
+  hasSearched: boolean = false;
 
-  constructor(private rideService: RideService, private router: Router) {}
-
-  ngOnInit() {
+  constructor(
+    private rideService: RideService,
+    private http: HttpClient,
+    private signalRService: SignalRServices 
+  ) {
     window.addEventListener('openLoginModal', () => {
       this.showLoginModal = true;
+    });
+  }
+
+  //Initialize userId and SignalR connection
+  ngOnInit(): void {
+    const storedUserId = localStorage.getItem('userId');
+    const seats = localStorage.getItem('seats');
+    const rideId = localStorage.getItem('rideId');
+    if (rideId) {
+      this.rideQuery.passengers = parseInt(rideId, 10);
+    }
+    if (seats) {
+      this.rideQuery.passengers = parseInt(seats, 10);
+    }
+
+    console.log('Retrieved seats from localStorage:', this.rideQuery.passengers);
+    if (storedUserId) {
+      this.userId = parseInt(storedUserId, 10);
+    } else {
+      
+      this.userId = Math.floor(Math.random() * 1000) + 1;
+      localStorage.setItem('userId', this.userId.toString());
+    }
+
+    console.log('Current userId:', this.userId);
+
+    // Start SignalR connection for this user
+    this.signalRService.startConnection(this.userId);
+
+    // Listen for booking requests or responses
+    this.signalRService.bookingRequests$.subscribe((data) => {
+      if (data) {
+        console.log('Received booking request:', data);
+        this.incomingBooking = data;
+      }
+    });
+
+    this.signalRService.rideResponses$.subscribe((data) => {
+      if (data) {
+        console.log('Received ride response:', data);
+        alert(`Your booking was ${data.status} by publisher.`);
+      }
     });
   }
 
@@ -98,17 +146,98 @@ export class HomeComponent {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
   }
 
-  // 🚗 Navigate to Booking Details
+  // Updated booking logic
   bookRide(ride: any) {
-  if(!localStorage.getItem('userId')) {
-    alert('Please log in to book a ride.');
-    this.router.navigate(['/login']);
-    this.showLoginModal = true;
-    return;
+    try {
+
+      const rideId = ride.rideId || ride.RideId || ride.id;
+      const publisherId = ride.publisherId || ride.PublisherId;
+
+      if (!rideId) {
+        console.error('rideId not found in search results:', ride);
+        alert('Ride ID not found. Please try again.');
+        return;
+      }
+
+
+      let userId = parseInt(localStorage.getItem('userId') || '0', 10);
+      if (!userId || userId === 0) {
+        userId = this.userId || Math.floor(Math.random() * 1000) + 1;
+        localStorage.setItem('userId', userId.toString());
+      }
+
+
+      const seats = this.rideQuery.passengers || 1;
+
+
+      localStorage.setItem('rideId', rideId.toString());
+      localStorage.setItem('seats', seats.toString());
+      localStorage.setItem('userId', userId.toString());
+
+      console.log('Booking parameters ready:', { rideId, userId, seats, publisherId });
+
+
+      const bookingUrl = `http://localhost:5205/api/v1/Booking?userId=${userId}&rideId=${rideId}&seats=${seats}`;
+      const publisherUserIdUrl = `http://localhost:5205/api/v1/Booking/publisher/details?publisherId=${publisherId}`;
+
+      this.http.post(bookingUrl, null, { responseType: 'json' }).subscribe({
+        next: (response) => {
+          console.log('Ride booked successfully:', response);
+
+          
+          const publisherUserIdUrl = `http://localhost:5205/api/v1/Booking/publisher/details/${publisherId}`;
+
+          this.http.get<any>(publisherUserIdUrl).subscribe({
+            next: (pubResponse) => {
+              const publisherUserId = pubResponse.user.id;
+              console.log('Publisher userId:', publisherUserId);
+
+            
+              localStorage.setItem('publisherUserId', publisherUserId.toString());
+
+             
+              this.signalRService.UserBookedRide(publisherUserId, userId, rideId);
+              console.log(`Notified publisher (${publisherUserId}) about booking.`);
+
+              alert(`Booking confirmed for ride ${rideId}!`);
+            },
+            error: (err) => {
+              console.error('Failed to retrieve publisher userId:', err);
+              alert('Failed to retrieve publisher info.');
+            }
+          });
+
+        },
+        error: (err) => {
+          console.error('Booking failed:', err);
+          if (err.status === 400) {
+            alert('Invalid booking data. Please check ride or user info.');
+          } else if (err.status === 0) {
+            alert('Could not reach backend API. Check if it’s running.');
+          } else {
+            alert('Failed to book ride. Please try again later.');
+          }
+        }
+      });
+
+    } catch (ex) {
+      console.error('Unexpected error while booking:', ex);
+      alert('Something went wrong while booking. Please try again.');
+    }
   }
-  console.log('Booking ride:', ride);
-  alert(`Booking confirmed for ride from ${ride.from || ride.From} to ${ride.to || ride.To}!`);
-  this.router.navigate(['/booking-details'], { state: { ride } });
-}
+
+  respondToBooking(status: string) {
+    if (!this.incomingBooking) return;
+
+    const { userId, rideId } = this.incomingBooking;
+
+   
+    this.signalRService.PublisherResponded(userId, rideId, status);
+
+    console.log(`Publisher responded with ${status} for ride ${rideId}`);
+
+    alert(`You have ${status} the booking request.`);
+    this.incomingBooking = null; 
+  }
 
 }

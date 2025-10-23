@@ -3,14 +3,14 @@
   <div class="nav-left">
     <h2>RideGeleya</h2>
   </div>
-
+ 
   <!-- Middle -->
   <div class="nav-middle">
     <a routerLink="/home">Home</a>
     <a routerLink="/about" routerLinkActive="text-cyan-400" class="hover:text-cyan-300 transition">About</a>
     <a routerLink="/Contact">Contact</a>
   </div>
-
+ 
   <!-- Right -->
   <div class="nav-right">
     <button class="publish-btn" routerLink="/create">Publish a Ride</button>
@@ -18,9 +18,9 @@
 
 
     <!-- Conditional Login/Profile -->
-    <ng-container *ngIf="!isLoggedIn; else profileTemplate">
+    <!-- <ng-container *ngIf="!isLoggedIn; else profileTemplate"> -->
+      <!-- </ng-container> -->
       <button class="icon-btn" routerLink="/login"> Login</button>
-    </ng-container>
 
     <ng-template #profileTemplate>
       <a routerLink="/userprofile">

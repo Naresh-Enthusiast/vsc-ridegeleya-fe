@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,11 @@ import * as signalR from '@microsoft/signalr';
 export class SignalRServices {
   private hubConnection!: signalR.HubConnection;
 
+  //observable emits events for components
+  public bookingRequests$ = new BehaviorSubject<any>(null);
+  public rideResponses$ = new BehaviorSubject<any>(null);
+
+  constructor() {}
   // 🔹 Start connection (userId optional — only for publisher)
   startConnection(userId?: number): void {
     let url = 'http://localhost:5205/notificationHub';
@@ -22,16 +28,41 @@ export class SignalRServices {
 
     this.hubConnection
       .start()
-      .then(() =>
-        console.log(
-          `✅ SignalR connected to /notificationHub ${
-            userId ? 'for user ' + userId : '(admin connection)'
-          }`
-        )
-      )
-      .catch(err => console.error('❌ SignalR connection error:', err));
+      .then(() => console.log(` SignalR connected to /notificationHub${userId ? ' for user ' + userId : ''}`))
+      .catch(err => console.error(' SignalR connection error', err));
+  
   }
 
+  //Register Hub listeners
+  private registerOnServerEvents():void{
+
+    //publisher receives booking request
+    console.log('Registering SignalR server events...');
+    this.hubConnection.on('ReceiveBookingRequest',(data: any)=>{
+      console.log('Received booking request:', data);
+      this.bookingRequests$.next(data);
+    });
+
+    //rider receives response(accept/Deny)
+    this.hubConnection.on('ReceiveRideResponse',(data: any)=>{
+      console.log('Received ride response:', data);
+      this.rideResponses$.next(data);
+    });
+  }
+
+  //user books a ride 
+  UserBookedRide(publisherId: number, userId: number, rideId:number): void {
+    this.hubConnection.invoke('UserBookedRide', publisherId, userId, rideId)
+      .catch(err => console.error('SignalR invoke error', err));
+  }
+
+  //publisher responds to booking -> notify user
+  PublisherResponded(userId: number, rideId: number, status: string): void {
+    console.log("publisher response");
+    this.hubConnection.invoke('PublisherResponded', userId, rideId, status)
+      .catch(err => console.error('SignalR invoke error', err));
+  }
+  // Listen when Admin approves a request
   // 🔔 Admin → Publisher events
   onPublisherApproved(callback: (requestId: number) => void): void {
     this.hubConnection.on('PublisherRequestApproved', callback);
@@ -41,6 +72,7 @@ export class SignalRServices {
     this.hubConnection.on('PublisherRequestRejected', callback);
   }
 
+ 
   // 🔔 Publisher → Admin event (for new requests)
   onNewPublisherRequest(callback: (request: any) => void): void {
     this.hubConnection.on('NewPublisherRequest', callback);
@@ -61,6 +93,9 @@ export class SignalRServices {
   // 🔌 Stop the connection safely
   stopConnection(): void {
     if (this.hubConnection) {
+      
+      this.hubConnection.send('SendNotification')
+        .catch(err => console.error('SignalR send error', err));
       this.hubConnection
         .stop()
         .then(() => console.log('🔌 SignalR connection stopped.'))

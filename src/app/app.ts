@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminLogin } from './home/adminLogin/AdminLogin';
-import { SignalRService } from './services/signal-r';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -18,29 +17,27 @@ export class App implements OnInit, OnDestroy {
   private userId!: number;
 
   constructor(
-    private signalRService: SignalRService,
+    //private signalRService: SignalRService,
     private toastr: ToastrService
   ) {}
   ngOnInit(): void {
     // Get logged-in userId from localStorage
-    this.userId = Number(localStorage.getItem('userId'));
-    if (this.userId) {
-      // Start SignalR connection
-      this.signalRService.startConnection(this.userId);
+    // this.userId = Number(localStorage.getItem('userId'));
+    // if (this.userId) {
+    //   // Start SignalR connection
+    //   this.signalRService.startConnection(this.userId);
 
-      
-
-      // Listen for notifications
-      // this.signalRService.listenForNotifications((message: string) => {
-      //   // Show toastr popup
-      //   this.toastr.info(message, 'Notification');
-      // });
-    }
+    //   // Listen for notifications
+    //   this.signalRService.listenForNotifications((message: string) => {
+    //     // Show toastr popup
+    //     this.toastr.info(message, 'Notification');
+    //   });
+    // }
   }
 
   ngOnDestroy(): void {
     // Stop SignalR when app destroyed
-    this.signalRService.stopConnection();
+    //this.signalRService.stopConnection();
   }
 }
 

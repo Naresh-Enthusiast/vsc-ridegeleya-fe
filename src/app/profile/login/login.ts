@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr'
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SignalRService } from '../../services/signal-r';
+import { SignalRServices } from '../../services/signalr.service';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   private http: HttpClient,
   private router: Router,
   private toastr: ToastrService,
-  private signalRServices: SignalRService
+  private signalRServices: SignalRServices
 ) {}
 
 

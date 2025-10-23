@@ -1,9 +1,8 @@
-  
-    body {
+  body {
       margin: 0;
       font-family: Arial, sans-serif;
     }
-
+ 
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -12,18 +11,18 @@
       background-color: #009dff;
       color: white;
     }
-
+ 
     .nav-left h2 {
       margin: 0;
     }
-
+ 
     .nav-middle {
       display: flex;
       gap: 40px;
       justify-content: center;
       flex: 1;
     }
-
+ 
     .nav-middle a {
       color: white;
       text-decoration: none;
@@ -31,23 +30,23 @@
       font-weight: 500;
       transition: color 0.3s;
     }
-
+ 
     .nav-middle a:hover {
       color: #ffdd57;
     }
-
+ 
     .nav-right {
       display: flex;
       align-items: center;
       gap: 15px;
     }
-
+ 
     .search-bar {
       padding: 6px 10px;
       border: none;
       border-radius: 5px;
     }
-
+ 
     .icon-btn {
       background: none;
       border: none;
@@ -56,7 +55,7 @@
       color: white;
       transition: transform 0.2s;
     }
-
+ 
     .icon-btn:hover {
       transform: scale(1.2);
     }
