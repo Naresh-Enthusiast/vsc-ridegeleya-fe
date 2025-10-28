@@ -26,7 +26,7 @@ export class Approved implements OnInit {
   requests: Publishers[] = [];
   selectedImage: string | undefined;
 
-  private baseUrl = 'http://localhost:5205/api/Admin'; // ✅ corrected
+  private baseUrl = 'http://localhost:5205/api/v1/Admin'; 
 
   constructor(private http: HttpClient) {}
 

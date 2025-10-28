@@ -93,7 +93,7 @@ export class ForgotPassword {
       newPassword: this.newPassword
     };
 
-    this.http.post(`${this.API_BASE}/verify`, payload)
+    this.http.post(`${this.API_BASE}/verifyAndReset`, payload)
       .subscribe({
         next: (response) => {
           this.verifyLoading = false;

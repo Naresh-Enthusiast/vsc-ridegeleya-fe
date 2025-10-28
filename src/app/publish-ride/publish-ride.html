@@ -1,35 +1,116 @@
-<div class="publish-container">
-  <h2>Publish a Ride</h2>
-
-  <form (ngSubmit)="postRide()" #rideForm="ngForm" class="publish-form">
-
-    <label>publisherid</label>
-    <input type="number" [(ngModel)]="ride.publisherId" name="from" placeholder="Enter starting location" required />
-
-    <label>From</label>
-    <input type="text" [(ngModel)]="ride.from" name="from" placeholder="Enter starting location" required />
-
-    <label>To</label>
-    <input type="text" [(ngModel)]="ride.to" name="to" placeholder="Enter destination" required />
-
-    <label>Date</label>
-    <input type="date" [(ngModel)]="ride.date" name="date" required />
-
-    <label>Time</label>
-    <input type="time" [(ngModel)]="ride.startTime" name="startTime" required />
-
-    <label>Total Seats</label>
-    <input type="number" [(ngModel)]="ride.totalSeats" name="totalSeats" min="1" required />
-
-    <label>Available Seats</label>
-    <input type="number" [(ngModel)]="ride.availableSeats" name="availableSeats" min="1" required />
-
-    <label>Amount</label>
-    <input type="number" [(ngModel)]="ride.amount" name="amount" min="0" placeholder="Enter amount" required />
-
-    <button type="submit">Publish Ride</button>
-  </form>
-
-  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<div class="ride-container">
+  <div class="ride-card">
+    <h2>Create New Ride</h2>
+    
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+    
+    <form (ngSubmit)="onSubmit()" #rideForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="from">From</label>
+          <input 
+            type="text" 
+            id="from" 
+            name="from"
+            [(ngModel)]="rideData.from"
+            required
+            placeholder="Enter starting location"
+            class="form-control">
+        </div>
+        
+        <div class="form-group">
+          <label for="to">To</label>
+          <input 
+            type="text" 
+            id="to" 
+            name="to"
+            [(ngModel)]="rideData.to"
+            required
+            placeholder="Enter destination"
+            class="form-control">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input 
+            type="date" 
+            id="date" 
+            name="date"
+            [(ngModel)]="rideData.date"
+            required
+            class="form-control">
+        </div>
+        
+        <div class="form-group">
+          <label for="startTime">Start Time</label>
+          <input 
+            type="time" 
+            id="startTime" 
+            name="startTime"
+            [(ngModel)]="rideData.startTime"
+            required
+            class="form-control">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="totalSeats">Total Seats</label>
+          <input 
+            type="number" 
+            id="totalSeats" 
+            name="totalSeats"
+            [(ngModel)]="rideData.totalSeats"
+            required
+            min="1"
+            placeholder="0"
+            class="form-control">
+        </div>
+        
+        <div class="form-group">
+          <label for="availableSeats">Available Seats</label>
+          <input 
+            type="number" 
+            id="availableSeats" 
+            name="availableSeats"
+            [(ngModel)]="rideData.availableSeats"
+            required
+            min="0"
+            placeholder="0"
+            class="form-control">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="amount">Amount (₹)</label>
+        <input 
+          type="number" 
+          id="amount" 
+          name="amount"
+          [(ngModel)]="rideData.amount"
+          required
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+          class="form-control">
+      </div>
+      
+      <button 
+        type="submit" 
+        class="btn-submit"
+        [disabled]="!rideForm.form.valid || isSubmitting">
+        {{ isSubmitting ? 'Creating...' : 'Create Ride' }}
+      </button>
+    </form>
+  </div>
 </div>

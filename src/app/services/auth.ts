@@ -1,55 +1,44 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private loggedInUserId: number | null = null;
   private baseUrl = 'http://localhost:5205/api/v1/Admin';
-
+  private userIdKey = 'userId';
+  private publisherIdKey = 'publisherId';
 
   constructor(private http: HttpClient) {}
 
-  // Fake login for demo
-  login(userId: number) {
-    this.loggedInUserId = userId;
-    localStorage.setItem('userId', userId.toString());
+  getUserId(): string | null {
+    return localStorage.getItem(this.userIdKey);
   }
 
-  logout() {
-    this.loggedInUserId = null;
-    localStorage.removeItem('userId');
+  getPublisherId(): string | null {
+    return localStorage.getItem(this.publisherIdKey);
   }
 
-  getUserId(): number | null {
-    if (this.loggedInUserId) return this.loggedInUserId;
-
-    const storedId = localStorage.getItem('userId');
-    return storedId ? parseInt(storedId, 10) : null;
+  setPublisherId(id: number): void {
+    localStorage.setItem(this.publisherIdKey, id.toString());
   }
 
-  getPublisherId(): number | null {
-    if (this.loggedInUserId) return this.loggedInUserId;
+  fetchAndSetPublisherId() {
+    const userId = this.getUserId();
+    if (!userId) return;
 
-    const storedId = localStorage.getItem('userId');
-    return storedId ? parseInt(storedId, 10) : null;
-  }
-
-
-  isLoggedIn(): boolean {
-    return this.getUserId() !== null;
-  }
-  
-  sendOtp(username: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/send-otp`, username, {
-      headers: { 'Content-Type': 'application/json' }
+    this.http.get(`${this.baseUrl}/approved/${userId}`).subscribe({
+      next: (res: any) => {
+        // Assuming response contains publisherId
+        if (res && res.publisherId) {
+          this.setPublisherId(res.publisherId);
+          console.log('Publisher ID saved:', res.publisherId);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch publisher ID', err);
+      }
     });
   }
-
-  verifyOtp(username: string, otp: string): Observable<any> {
-    const body = { username, otp };
-    return this.http.post(`${this.baseUrl}/verify-otp`, body);
-  }
 }
+

@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { About } from '../../about/about';
+import { NgModel } from '@angular/forms';
+
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, About], // ✅ include CommonModule for *ngIf
+  imports: [CommonModule, RouterLink, About,CommonModule], // ✅ include CommonModule for *ngIf
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })

@@ -6,6 +6,7 @@ import { LoginComponent } from "../profile/login/login";
 import { RideService } from '../services/ride.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SignalRServices } from '../services/signalr.service'; 
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -200,6 +201,7 @@ export class HomeComponent implements OnInit {
               console.log(`Notified publisher (${publisherUserId}) about booking.`);
 
               alert(`Booking confirmed for ride ${rideId}!`);
+             
             },
             error: (err) => {
               console.error('Failed to retrieve publisher userId:', err);

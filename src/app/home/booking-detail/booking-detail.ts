@@ -36,12 +36,12 @@ export class BookingDetails {
 
     this.http.post(apiUrl, {}).subscribe({
       next: (res) => {
-        alert('🎉 Ride booked successfully!');
+        alert('🎉 Your Ride booked successfully!');
         this.router.navigate(['/booking-confirmation']);
       },
       error: (err) => {
         console.error(err);
-        alert('❌ Failed to book the ride. Please try again.');
+        alert(' Failed to book the ride. Please try again.');
       },
       complete: () => (this.bookingInProgress = false),
     });

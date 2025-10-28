@@ -1,20 +1,17 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { Ride, RideService } from '../services/ride';
-import { AuthService } from '../services/auth';
-import { FormsModule } from '@angular/forms';
-import { compileNgModule } from '@angular/compiler';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-publish-ride',
+  selector: 'app-create-ride',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './publish-ride.html',
-  imports: [FormsModule,CommonModule],
   styleUrls: ['./publish-ride.css']
 })
-export class PublishRideComponent {
-  ride: Ride = {
-    publisherId:0,
+export class PublishRide implements OnInit {
+  rideData = {
     from: '',
     to: '',
     date: '',
@@ -24,33 +21,92 @@ export class PublishRideComponent {
     amount: 0
   };
 
-  successMessage: string = '';
-  errorMessage: string = '';
+  isSubmitting = false;
+  successMessage = '';
+  errorMessage = '';
 
-  constructor(
-    private rideService: RideService,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  private userIdKey = 'userId';
+  private publisherIdKey = 'publisherId';
 
-  postRide() {
-    const publisherId = this.authService.getUserId();
-    if (!publisherId) {
-      this.router.navigate(['/login']);
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.fetchAndStorePublisherId();
+  }
+
+  /** 🔹 Fetch publisherId from backend and store in localStorage */
+  fetchAndStorePublisherId() {
+    const userId = localStorage.getItem(this.userIdKey);
+    if (!userId) {
+      console.error('User ID not found in localStorage');
       return;
     }
 
-    const rideToSend = { ...this.ride, publisherId };
-
-    this.rideService.publishRide(rideToSend).subscribe({
-      next: (res) => {
-        this.successMessage = 'Ride published successfully!';
-        this.errorMessage = '';
+    this.http.get(`http://localhost:5205/api/v1/Admin/approved/${userId}`).subscribe({
+      next: (res: any) => {
+        if (res && res.publisherId) {
+          localStorage.setItem(this.publisherIdKey, res.publisherId.toString());
+          console.log(' Publisher ID saved:', res.publisherId);
+        } else {
+          console.warn(' Publisher ID not found in API response');
+        }
       },
       error: (err) => {
-        this.errorMessage = 'Failed to publish ride!';
-        this.successMessage = '';
+        console.error('Failed to fetch publisher ID:', err);
       }
     });
+  }
+
+  /** 🔹 Create a new ride */
+  onSubmit() {
+    this.isSubmitting = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    const publisherId = localStorage.getItem(this.publisherIdKey);
+    console.log('Publisher ID from localStorage:', publisherId);
+
+    if (!publisherId) {
+      this.errorMessage = 'Publisher ID not found. Please reload or login again.';
+      this.isSubmitting = false;
+      return;
+    }
+
+    const payload = {
+      rideId: 0,
+      publisherId: parseInt(publisherId),
+      from: this.rideData.from,
+      to: this.rideData.to,
+      date: this.rideData.date,
+      startTime: this.rideData.startTime,
+      totalSeats: this.rideData.totalSeats,
+      availableSeats: this.rideData.availableSeats,
+      amount: this.rideData.amount
+    };
+
+    this.http.post('http://localhost:5205/api/v1/Ride', payload).subscribe({
+      next: () => {
+        this.successMessage = 'Ride created successfully!';
+        this.isSubmitting = false;
+        this.resetForm();
+      },
+      error: (error) => {
+        this.errorMessage = error.error?.message || 'Failed to create ride. Please try again.';
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  /** 🔹 Reset form fields */
+  resetForm() {
+    this.rideData = {
+      from: '',
+      to: '',
+      date: '',
+      startTime: '',
+      totalSeats: 0,
+      availableSeats: 0,
+      amount: 0
+    };
   }
 }

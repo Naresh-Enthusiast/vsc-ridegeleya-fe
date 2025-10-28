@@ -9,17 +9,18 @@ import { FormsModule } from '@angular/forms';
 import { PublisherRequest } from './home/publish-request/publish-request';
 import { OtpVerify } from './otp-verify/otp-verify';
 import { ProfileComponent } from './profile/userprofile/userprofile';
-import { PublishRideComponent } from './publish-ride/publish-ride';
-import { AuthGuard } from './guards/auth-guard';
+import { PublishRide } from './publish-ride/publish-ride';
+// import { AuthGuard } from './guards/auth-guard';
 import { Approved } from './home/admin/approved/approved';
 import { ForgotPassword } from './home/passwordreset/passwordreset'; 
 import { PublisherRequestsadmin } from './home/admin/publisher-requests/publisher-requests';
 import { Contact } from './contact/contact';
+import { Map } from './map/map';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'create', component: PublishRideComponent },
+  { path: 'create', component: PublishRide },
   { path: 'register', component: RegistrationComponent },
   {path:'login',component:LoginComponent},
   {path:'AdminLogin',component:AdminLogin},
@@ -28,11 +29,13 @@ export const routes: Routes = [
   {path:'userprofile',component:ProfileComponent},
   {path:'appoved',component:Approved},
   { path: 'admin',loadChildren: () =>import('./home/admin/admin-module').then(m => m.AdminModule)},
-  { path: 'publish-ride', component: PublishRideComponent, canActivate: [AuthGuard] },
+  { path: 'publish-ride', component: PublishRide },
     {path:'PublisherRequest',component:PublisherRequest},
   {path:'otp-verify',component:OtpVerify},
   {path:'password-reset',component:ForgotPassword},
-  {path:'publisher-requests',component:PublisherRequestsadmin, canActivate:[AuthGuard]},
+  {path :'profile',component:ProfileComponent},
+  {path:'map',component:Map},
+  {path:'publisher-requests',component:PublisherRequestsadmin},
   {
     path: 'home',
     loadChildren: () => import('./home/home').then(m => m.HomeComponent)
