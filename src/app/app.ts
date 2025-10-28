@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminLogin } from './home/adminLogin/AdminLogin';
+import { SignalRServices } from './services/signalr.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -17,15 +18,15 @@ export class App implements OnInit, OnDestroy {
   private userId!: number;
 
   constructor(
-    //private signalRService: SignalRService,
+    private signalRServices: SignalRServices,
     private toastr: ToastrService
   ) {}
   ngOnInit(): void {
-    // Get logged-in userId from localStorage
+    // // Get logged-in userId from localStorage
     // this.userId = Number(localStorage.getItem('userId'));
     // if (this.userId) {
     //   // Start SignalR connection
-    //   this.signalRService.startConnection(this.userId);
+    //   this.signalRServices.startConnection(this.userId);
 
     //   // Listen for notifications
     //   this.signalRService.listenForNotifications((message: string) => {
@@ -37,7 +38,7 @@ export class App implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Stop SignalR when app destroyed
-    //this.signalRService.stopConnection();
+    this.signalRServices.stopConnection();
   }
 }
 

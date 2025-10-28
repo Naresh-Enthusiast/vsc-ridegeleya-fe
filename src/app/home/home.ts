@@ -5,19 +5,28 @@ import { NavbarComponent } from './navbar/navbar';
 import { LoginComponent } from "../profile/login/login";
 import { RideService } from '../services/ride.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { SignalRServices } from '../services/signalr.service'; 
+import { SignalRServices } from '../services/signalr.service';
+import { RatingService } from '../services/rating.service'; // ✅ Import RatingService
+import { Rating } from './rating/rating';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent, LoginComponent, HttpClientModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NavbarComponent,
+    LoginComponent,
+    HttpClientModule,
+    Rating,
+    RouterLink
+  ],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
 export class HomeComponent implements OnInit {
 
-  
   userId: number = 0;
   incomingBooking: any = null;
 
@@ -43,41 +52,36 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private rideService: RideService,
+    private ratingService: RatingService, // ✅ Inject RatingService
     private http: HttpClient,
-    private signalRService: SignalRServices 
+    private signalRService: SignalRServices
   ) {
     window.addEventListener('openLoginModal', () => {
       this.showLoginModal = true;
     });
   }
 
-  //Initialize userId and SignalR connection
   ngOnInit(): void {
-    const storedUserId = localStorage.getItem('userId');
-    const seats = localStorage.getItem('seats');
-    const rideId = localStorage.getItem('rideId');
-    if (rideId) {
-      this.rideQuery.passengers = parseInt(rideId, 10);
-    }
-    if (seats) {
-      this.rideQuery.passengers = parseInt(seats, 10);
-    }
+    this.initializeUser();
+    this.setupSignalR();
+  }
 
-    console.log('Retrieved seats from localStorage:', this.rideQuery.passengers);
+  // ✅ Initialize user
+  private initializeUser(): void {
+    const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
       this.userId = parseInt(storedUserId, 10);
     } else {
-      
       this.userId = Math.floor(Math.random() * 1000) + 1;
       localStorage.setItem('userId', this.userId.toString());
     }
-
     console.log('Current userId:', this.userId);
+  }
 
-    // Start SignalR connection for this user
+  // ✅ Setup SignalR
+  private setupSignalR(): void {
     this.signalRService.startConnection(this.userId);
 
-    // Listen for booking requests or responses
     this.signalRService.bookingRequests$.subscribe((data) => {
       if (data) {
         console.log('Received booking request:', data);
@@ -97,19 +101,15 @@ export class HomeComponent implements OnInit {
     this.showLoginModal = false;
   }
 
+  // ✅ Location filter
   filterLocations(type: 'from' | 'to') {
-    const query =
-      type === 'from'
-        ? this.rideQuery.from.trim().toLowerCase()
-        : this.rideQuery.to.trim().toLowerCase();
-
+    const query = (type === 'from' ? this.rideQuery.from : this.rideQuery.to).trim().toLowerCase();
     if (!query) {
-      if (type === 'from') this.filteredFromLocations = [];
-      else this.filteredToLocations = [];
+      type === 'from' ? this.filteredFromLocations = [] : this.filteredToLocations = [];
       return;
     }
 
-    const filtered = this.allLocations.filter((loc) =>
+    const filtered = this.allLocations.filter(loc =>
       loc.toLowerCase().startsWith(query)
     );
 
@@ -117,6 +117,7 @@ export class HomeComponent implements OnInit {
     else this.filteredToLocations = filtered;
   }
 
+  // ✅ Search rides
   searchRides() {
     this.hasSearched = true;
     this.errorMessage = '';
@@ -126,8 +127,9 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         console.log('API Response:', response);
 
-        if (response && Array.isArray(response) && response.length > 0) {
+        if (Array.isArray(response) && response.length > 0) {
           this.rides = response;
+          this.loadRatingsForRides(); // ✅ Load ratings after rides
         } else {
           this.errorMessage = 'No rides available for the selected route.';
         }
@@ -139,6 +141,23 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  // ✅ Load ratings for each ride
+  loadRatingsForRides() {
+    this.rides.forEach(ride => {
+      this.rideService.getRatingsByPublisher(ride.publisherId).subscribe({
+        next: ratings => {
+          if (ratings.length > 0) {
+            const avg = ratings.reduce((sum, r) => sum + r.stars, 0) / ratings.length;
+            ride.avgRating = avg;
+          } else {
+            ride.avgRating = 0;
+          }
+        },
+        error: err => console.error('Error loading ratings:', err)
+      });
+    });
+  }
+
   getRideKeys(ride: any): string[] {
     return Object.keys(ride);
   }
@@ -147,99 +166,65 @@ export class HomeComponent implements OnInit {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
   }
 
-  // Updated booking logic
+  // ✅ Booking Logic
   bookRide(ride: any) {
     try {
-
       const rideId = ride.rideId || ride.RideId || ride.id;
       const publisherId = ride.publisherId || ride.PublisherId;
 
-      if (!rideId) {
-        console.error('rideId not found in search results:', ride);
-        alert('Ride ID not found. Please try again.');
+      if (!rideId || !publisherId) {
+        alert('Ride or Publisher ID missing.');
         return;
       }
 
-
       let userId = parseInt(localStorage.getItem('userId') || '0', 10);
-      if (!userId || userId === 0) {
-        userId = this.userId || Math.floor(Math.random() * 1000) + 1;
+      if (!userId) {
+        userId = this.userId;
         localStorage.setItem('userId', userId.toString());
       }
 
-
       const seats = this.rideQuery.passengers || 1;
-
-
-      localStorage.setItem('rideId', rideId.toString());
-      localStorage.setItem('seats', seats.toString());
-      localStorage.setItem('userId', userId.toString());
-
-      console.log('Booking parameters ready:', { rideId, userId, seats, publisherId });
-
-
       const bookingUrl = `http://localhost:5205/api/v1/Booking?userId=${userId}&rideId=${rideId}&seats=${seats}`;
-      const publisherUserIdUrl = `http://localhost:5205/api/v1/Booking/publisher/details?publisherId=${publisherId}`;
 
-      this.http.post(bookingUrl, null, { responseType: 'json' }).subscribe({
+      this.http.post(bookingUrl, null).subscribe({
         next: (response) => {
           console.log('Ride booked successfully:', response);
 
-          
+          // Get publisher's SignalR user ID
           const publisherUserIdUrl = `http://localhost:5205/api/v1/Booking/publisher/details/${publisherId}`;
-
           this.http.get<any>(publisherUserIdUrl).subscribe({
             next: (pubResponse) => {
               const publisherUserId = pubResponse.user.id;
               console.log('Publisher userId:', publisherUserId);
 
-            
               localStorage.setItem('publisherUserId', publisherUserId.toString());
-
-             
               this.signalRService.UserBookedRide(publisherUserId, userId, rideId);
-              console.log(`Notified publisher (${publisherUserId}) about booking.`);
-
               alert(`Booking confirmed for ride ${rideId}!`);
-             
             },
             error: (err) => {
               console.error('Failed to retrieve publisher userId:', err);
               alert('Failed to retrieve publisher info.');
             }
           });
-
         },
         error: (err) => {
           console.error('Booking failed:', err);
-          if (err.status === 400) {
-            alert('Invalid booking data. Please check ride or user info.');
-          } else if (err.status === 0) {
-            alert('Could not reach backend API. Check if it’s running.');
-          } else {
-            alert('Failed to book ride. Please try again later.');
-          }
+          alert('Failed to book ride. Please try again later.');
         }
       });
-
     } catch (ex) {
       console.error('Unexpected error while booking:', ex);
       alert('Something went wrong while booking. Please try again.');
     }
   }
 
+  // ✅ Publisher response
   respondToBooking(status: string) {
     if (!this.incomingBooking) return;
 
     const { userId, rideId } = this.incomingBooking;
-
-   
     this.signalRService.PublisherResponded(userId, rideId, status);
-
-    console.log(`Publisher responded with ${status} for ride ${rideId}`);
-
     alert(`You have ${status} the booking request.`);
-    this.incomingBooking = null; 
+    this.incomingBooking = null;
   }
-
 }
