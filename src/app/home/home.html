@@ -99,26 +99,6 @@
             <div *ngFor="let key of getRideKeys(ride)">
               <p><strong>{{ formatKey(key) }}:</strong> {{ ride[key] }}</p>
             </div>
-          </div>
-
-          <div class="ride-footer">
-            <button
-              class="book-btn hover:scale-105 transition-all duration-200"
-              (click)="bookRide(ride)"
-            >
-              🚗 Book Now
-            </button>
-
-            <!-- Rating Display -->
-            <!-- <p *ngIf="ride.avgRating > 0" class="rating-text"> -->
-            ⭐ {{ ride.avgRating | number: '1.1-1' }}/5
-            <!-- </p> -->
-            <!-- <p *ngIf="ride.avgRating yallLocations=== 0" class="rating-text">⭐ No ratings yet</p> -->
-
-            <!-- //this is for posting this Rating  -->
-            <!-- <app-rating [rideId]="ride.rideId || ride.id"></app-rating> -->
-
-
             <div class="ride-footer">
               <button class="book-btn hover:scale-105 transition-all duration-200" (click)="bookRide(ride)">
                 🚗 Book Now
@@ -128,32 +108,20 @@
         </div>
       </div>
     </div>
-
-    <!-- Booking Request Modal -->
-    <div class="booking-request-modal" *ngIf="incomingBooking">
-      <div class="modal-content">
-        <h3>New Booking Request</h3>
-        <p><strong>Ride ID:</strong> {{ incomingBooking.rideId }}</p>
-        <p><strong>User ID:</strong> {{ incomingBooking.userId }}</p>
-        <p>Do you want to accept this booking?</p>
     <!-- 🧩 Booking Request Popup -->
-    <div class="booking-request-modal" *ngIf="incomingBooking">
-      <div class="modal-content">
-        <h3>🚗 New Booking Request</h3>
-        <p><strong>Ride ID:</strong> {{ incomingBooking.rideId }}</p>
-        <p><strong>User ID:</strong> {{ incomingBooking.userId }}</p>
-        <p>Do you want to accept this booking?</p>
+<div class="booking-request-modal" *ngIf="incomingBooking">
+  <div class="modal-content">
+    <h3>🚗 New Booking Request</h3>
+    <p><strong>Ride ID:</strong> {{ incomingBooking.rideId }}</p>
+    <p><strong>User ID:</strong> {{ incomingBooking.userId }}</p>
+    <p>Do you want to accept this booking?</p>
 
-        <div class="modal-buttons">
-          <button class="accept-btn" (click)="respondToBooking('Accepted')">
-            ✅ Accept
-          </button>
-          <button class="reject-btn" (click)="respondToBooking('Rejected')">
-            ❌ Reject
-          </button>
-        </div>
-      </div>
+    <div class="modal-buttons">
+      <button class="accept-btn" (click)="respondToBooking('Accepted')">✅ Accept</button>
+      <button class="reject-btn" (click)="respondToBooking('Rejected')">❌ Reject</button>
     </div>
+  </div>
+</div>
 
     <!-- Error Message -->
     <div *ngIf="errorMessage" class="error-message">

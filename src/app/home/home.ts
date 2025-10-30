@@ -4,12 +4,12 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar';
 import { LoginComponent } from '../profile/login/login';
 import { RideService } from '../services/ride.service';
-import { LocationService } from '../services/Location.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SignalRServices } from '../services/signalr.service';
 import { RatingService } from '../services/rating.service';
 import { Rating } from './rating/rating';
 import { RouterLink } from '@angular/router';
+import { LocationService } from '../services/Location.service';
 
 @Component({
   selector: 'app-home',
@@ -53,6 +53,7 @@ export class HomeComponent implements OnInit {
     private locationService: LocationService,
     private signalRService: SignalRServices
   ) {
+    // Listen for login modal trigger event
     window.addEventListener('openLoginModal', () => {
       this.showLoginModal = true;
     });
@@ -151,7 +152,7 @@ export class HomeComponent implements OnInit {
 
         if (Array.isArray(response) && response.length > 0) {
           this.rides = response;
-          this.loadRatingsForRides();
+          // this.loadRatingsForRides();
         } else {
           this.errorMessage = 'No rides available for the selected route.';
         }
@@ -179,6 +180,7 @@ export class HomeComponent implements OnInit {
       });
     });
   }
+  
 
   /** ✅ Format dynamic key/value pairs */
   getRideKeys(ride: any): string[] {
@@ -240,7 +242,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  /** ✅ Publisher response to booking */
+  /** ✅ Publisher response */
   respondToBooking(status: string) {
     if (!this.incomingBooking) return;
     const { userId, rideId } = this.incomingBooking;

@@ -6,32 +6,25 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RideService {
-
   private apiUrl = 'http://localhost:5205/api/v1/User/availability';
-  private ratingUlr ='http://localhost:5205/api/v1/Ratings';
+  private ratingUrl = 'http://localhost:5205/api/v1/Ratings';
 
   constructor(private http: HttpClient) {}
 
-  searchRides(rideData: any): Observable<any> {
+  /** Search for rides */
+  searchRides(rideData: any): Observable<any[]> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.apiUrl, rideData, { headers });
+    return this.http.post<any[]>(this.apiUrl, rideData, { headers });
   }
 
-  getRides(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  /** Get all rides */
+  getRides(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
-  
-  // ➕ Add a new rating
-  addRating(data: any): Observable<any> {
-    return this.http.post(`${this.ratingUlr}/add`, data);
+
+  /** Get ratings by publisher */
+  getRatingsByPublisher(publisherId: number): Observable<any[]> {
+    console.log('Fetching ratings for publisherId:', publisherId);
+    return this.http.get<any[]>(`${this.ratingUrl}/publisher/${publisherId}`);
   }
-  
-  // 📦 Get all ratings for a ride  
-  getRatings(rideId: number): Observable<any> {
-    return this.http.get(`${this.ratingUlr}/${rideId}`);
-  }
-  // Get all ratings for a specific publisher (driver)
-getRatingsByPublisher(publisherId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.ratingUlr}/${publisherId}`);
-}
 }

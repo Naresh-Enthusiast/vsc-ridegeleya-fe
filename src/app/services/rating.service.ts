@@ -15,12 +15,13 @@ export class RatingService {
     return this.http.post(`${this.baseUrl}/add`, data);
   }
 
-  // 📦 Get all ratings for a ride  
-  getRatings(rideId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${rideId}`);
+  // 📦 Get all ratings for a specific ride
+  getRatings(rideId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/${rideId}`);
   }
-  // Get all ratings for a specific publisher (driver)
-getRatingsByPublisher(publisherId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.getRatings}/${publisherId}`);
-}
+
+  // 👤 Get all ratings by publisher (driver)
+  getRatingsByPublisher(publisherId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/publisher/${publisherId}`);
+  }
 }
