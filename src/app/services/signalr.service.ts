@@ -69,7 +69,7 @@ export class SignalRServices {
       .catch(err => console.error('SignalR invoke error', err));
   }
   // Listen when Admin approves a request
-  // 🔔 Admin → Publisher events
+  // Admin → Publisher events
   onPublisherApproved(callback: (requestId: number) => void): void {
     this.hubConnection.on('PublisherRequestApproved', callback);
   }
@@ -94,10 +94,11 @@ export class SignalRServices {
         .catch(err => console.error('SignalR send error:', err));
     } else {
       console.warn('SignalR not connected. Cannot send notification.');
+      
     }
   }
 
-  // 🔌 Stop the connection safely
+  //  Stop the connection safely
   stopConnection(): void {
     if (this.hubConnection) {
 
@@ -107,6 +108,7 @@ export class SignalRServices {
         .stop()
         .then(() => console.log('SignalR connection stopped.'))
         .catch(err => console.error('Error stopping SignalR connection:', err));
+       
     }
   }
 }

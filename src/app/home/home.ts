@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar';
-import { LoginComponent } from "../profile/login/login";
+import { LoginComponent } from '../profile/login/login';
 import { RideService } from '../services/ride.service';
+import { LocationService } from '../services/Location.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SignalRServices } from '../services/signalr.service';
-import { RatingService } from '../services/rating.service'; // ✅ Import RatingService
+import { RatingService } from '../services/rating.service';
 import { Rating } from './rating/rating';
 import { RouterLink } from '@angular/router';
 
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit {
 
   userId: number = 0;
   incomingBooking: any = null;
+  showLoginModal = false;
 
   rideQuery = {
     from: '',
@@ -38,22 +40,17 @@ export class HomeComponent implements OnInit {
     time: ''
   };
 
-  allLocations: string[] = [
-    'Hyderabad', 'Bangalore', 'Chennai', 'Mumbai', 'Delhi',
-    'Pune', 'Ahmedabad', 'Kolkata', 'Jaipur', 'Coimbatore'
-  ];
-
   filteredFromLocations: string[] = [];
   filteredToLocations: string[] = [];
-  showLoginModal = false;
   rides: any[] = [];
   errorMessage: string = '';
   hasSearched: boolean = false;
 
   constructor(
     private rideService: RideService,
-    private ratingService: RatingService, // ✅ Inject RatingService
+    private ratingService: RatingService,
     private http: HttpClient,
+    private locationService: LocationService,
     private signalRService: SignalRServices
   ) {
     window.addEventListener('openLoginModal', () => {
@@ -66,7 +63,7 @@ export class HomeComponent implements OnInit {
     this.setupSignalR();
   }
 
-  // ✅ Initialize user
+  /** ✅ Initialize user */
   private initializeUser(): void {
     const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
@@ -78,22 +75,16 @@ export class HomeComponent implements OnInit {
     console.log('Current userId:', this.userId);
   }
 
-  // ✅ Setup SignalR
+  /** ✅ Setup SignalR */
   private setupSignalR(): void {
     this.signalRService.startConnection(this.userId);
 
     this.signalRService.bookingRequests$.subscribe((data) => {
-      if (data) {
-        console.log('Received booking request:', data);
-        this.incomingBooking = data;
-      }
+      if (data) this.incomingBooking = data;
     });
 
     this.signalRService.rideResponses$.subscribe((data) => {
-      if (data) {
-        console.log('Received ride response:', data);
-        alert(`Your booking was ${data.status} by publisher.`);
-      }
+      if (data) alert(`Your booking was ${data.status} by publisher.`);
     });
   }
 
@@ -101,23 +92,54 @@ export class HomeComponent implements OnInit {
     this.showLoginModal = false;
   }
 
-  // ✅ Location filter
-  filterLocations(type: 'from' | 'to') {
-    const query = (type === 'from' ? this.rideQuery.from : this.rideQuery.to).trim().toLowerCase();
-    if (!query) {
-      type === 'from' ? this.filteredFromLocations = [] : this.filteredToLocations = [];
+  /** ✅ Fetch suggestions dynamically for "From" */
+  onFromInput(query: string): void {
+    this.rideQuery.from = query;
+    if (!query || query.length < 2) {
+      this.filteredFromLocations = [];
       return;
     }
 
-    const filtered = this.allLocations.filter(loc =>
-      loc.toLowerCase().startsWith(query)
-    );
-
-    if (type === 'from') this.filteredFromLocations = filtered;
-    else this.filteredToLocations = filtered;
+    this.locationService.getLocations(query).subscribe({
+      next: (data: any) => {
+        this.filteredFromLocations = data.geonames
+          ? data.geonames.map((loc: any) => `${loc.name}, ${loc.countryName}`)
+          : [];
+      },
+      error: (err: any) => console.error('Error fetching "From" locations:', err)
+    });
   }
 
-  // ✅ Search rides
+  /** ✅ Fetch suggestions dynamically for "To" */
+  onToInput(query: string): void {
+    this.rideQuery.to = query;
+    if (!query || query.length < 2) {
+      this.filteredToLocations = [];
+      return;
+    }
+
+    this.locationService.getLocations(query).subscribe({
+      next: (data: any) => {
+        this.filteredToLocations = data.geonames
+          ? data.geonames.map((loc: any) => `${loc.name}, ${loc.countryName}`)
+          : [];
+      },
+      error: (err: any) => console.error('Error fetching "To" locations:', err)
+    });
+  }
+
+  /** ✅ User selects a suggestion */
+  selectFromLocation(location: string) {
+    this.rideQuery.from = location;
+    this.filteredFromLocations = [];
+  }
+
+  selectToLocation(location: string) {
+    this.rideQuery.to = location;
+    this.filteredToLocations = [];
+  }
+
+  /** ✅ Search rides */
   searchRides() {
     this.hasSearched = true;
     this.errorMessage = '';
@@ -129,19 +151,19 @@ export class HomeComponent implements OnInit {
 
         if (Array.isArray(response) && response.length > 0) {
           this.rides = response;
-          this.loadRatingsForRides(); // ✅ Load ratings after rides
+          this.loadRatingsForRides();
         } else {
           this.errorMessage = 'No rides available for the selected route.';
         }
       },
       error: (err) => {
-        console.error('API Error:', err);
+        console.error('Search failed:', err);
         this.errorMessage = 'Something went wrong. Please try again later.';
       }
     });
   }
 
-  // ✅ Load ratings for each ride
+  /** ✅ Load ratings for each ride */
   loadRatingsForRides() {
     this.rides.forEach(ride => {
       this.rideService.getRatingsByPublisher(ride.publisherId).subscribe({
@@ -158,6 +180,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /** ✅ Format dynamic key/value pairs */
   getRideKeys(ride: any): string[] {
     return Object.keys(ride);
   }
@@ -166,7 +189,7 @@ export class HomeComponent implements OnInit {
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
   }
 
-  // ✅ Booking Logic
+  /** ✅ Booking Logic */
   bookRide(ride: any) {
     try {
       const rideId = ride.rideId || ride.RideId || ride.id;
@@ -186,11 +209,10 @@ export class HomeComponent implements OnInit {
       const seats = this.rideQuery.passengers || 1;
       const bookingUrl = `http://localhost:5205/api/v1/Booking?userId=${userId}&rideId=${rideId}&seats=${seats}`;
 
-      this.http.post(bookingUrl, null).subscribe({
+      this.http.post(bookingUrl, null, { responseType: 'json' }).subscribe({
         next: (response) => {
           console.log('Ride booked successfully:', response);
 
-          // Get publisher's SignalR user ID
           const publisherUserIdUrl = `http://localhost:5205/api/v1/Booking/publisher/details/${publisherId}`;
           this.http.get<any>(publisherUserIdUrl).subscribe({
             next: (pubResponse) => {
@@ -212,16 +234,15 @@ export class HomeComponent implements OnInit {
           alert('Failed to book ride. Please try again later.');
         }
       });
-    } catch (ex) {
-      console.error('Unexpected error while booking:', ex);
-      alert('Something went wrong while booking. Please try again.');
+    } catch (error) {
+      console.error('Unexpected booking error:', error);
+      alert('Something went wrong. Please try again.');
     }
   }
 
-  // ✅ Publisher response
+  /** ✅ Publisher response to booking */
   respondToBooking(status: string) {
     if (!this.incomingBooking) return;
-
     const { userId, rideId } = this.incomingBooking;
     this.signalRService.PublisherResponded(userId, rideId, status);
     alert(`You have ${status} the booking request.`);

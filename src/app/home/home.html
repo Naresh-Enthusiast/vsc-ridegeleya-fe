@@ -3,48 +3,111 @@
 
   <!-- Main Container -->
   <div class="home-container">
-
     <!-- Ride Search Form -->
     <form (ngSubmit)="searchRides()" class="ride-form">
       <h2>Search Your Ride</h2>
 
-      <!-- From Location Input with Suggestions -->
-      <input type="text" [(ngModel)]="rideQuery.from" name="from" placeholder="From" (input)="filterLocations('from')"
-        list="fromLocations" required />
-      <datalist id="fromLocations">
-        <option *ngFor="let loc of filteredFromLocations" [value]="loc"></option>
-      </datalist>
+      <!-- From Location Input -->
+      <div class="form-group">
+        
+        <input
+          type="text"
+          [(ngModel)]="rideQuery.from"
+          name="from"
+          (input)="onFromInput($event.target.value)"
+          placeholder="From"
+          class="form-control"
+          autocomplete="off"
+          required
+        />
+        <ul *ngIf="filteredFromLocations.length" class="suggestions-list">
+          <li
+            *ngFor="let loc of filteredFromLocations"
+            (click)="selectFromLocation(loc)"
+          >
+            {{ loc }}
+          </li>
+        </ul>
+      </div>
 
-      <!-- To Location Input with Suggestions -->
-      <input type="text" [(ngModel)]="rideQuery.to" name="to" placeholder="To" (input)="filterLocations('to')"
-        list="toLocations" required />
-      <datalist id="toLocations">
-        <option *ngFor="let loc of filteredToLocations" [value]="loc"></option>
-      </datalist>
+      <!-- To Location Input -->
+      <div class="form-group">
+      
+        <input
+          type="text"
+          [(ngModel)]="rideQuery.to"
+          name="to"
+          (input)="onToInput($event.target.value)"
+          placeholder="To"
+          class="form-control"
+          autocomplete="off"
+          required
+        />
+        <ul *ngIf="filteredToLocations.length" class="suggestions-list">
+          <li
+            *ngFor="let loc of filteredToLocations"
+            (click)="selectToLocation(loc)"
+          >
+            {{ loc }}
+          </li>
+        </ul>
+      </div>
 
-      <input type="date" [(ngModel)]="rideQuery.date" name="date" required />
-      <input type="number" [(ngModel)]="rideQuery.passengers" name="passengers" min="1" placeholder="Passengers"
-        required />
+      <!-- Date -->
+      <div class="form-group">
+       
+        <input
+          type="date"
+          [(ngModel)]="rideQuery.date"
+          name="date"
+          class="form-control"
+          required
+        />
+      </div>
 
-      <button type="submit">Search</button>
+      <!-- Passengers -->
+      <div class="form-group">
+        <input
+          type="number"
+          [(ngModel)]="rideQuery.passengers"
+          name="passengers"
+          min="1"
+          placeholder="Passengers"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
-    <!-- ✅ Search Results Section -->
+    <!-- Rides Result Section -->
     <div class="rides-list" *ngIf="rides.length > 0">
       <h3>Available Rides</h3>
 
       <div class="ride-cards">
         <div class="ride-card" *ngFor="let ride of rides">
           <div class="ride-header">
-            <h4>{{ ride.from || ride.From || 'Unknown Source' }} → {{ ride.to || ride.To || 'Unknown Destination' }}
+            <h4>
+              {{ ride.from || ride.From || 'Unknown Source' }} →
+              {{ ride.to || ride.To || 'Unknown Destination' }}
             </h4>
           </div>
 
-          <!-- Dynamically show all key-value pairs -->
+          <!-- Dynamically show all ride details -->
           <div class="ride-body">
             <div *ngFor="let key of getRideKeys(ride)">
               <p><strong>{{ formatKey(key) }}:</strong> {{ ride[key] }}</p>
             </div>
+          </div>
+
+          <div class="ride-footer">
+            <button
+              class="book-btn hover:scale-105 transition-all duration-200"
+              (click)="bookRide(ride)"
+            >
+              🚗 Book Now
+            </button>
 
             <!-- Rating Display -->
             <!-- <p *ngIf="ride.avgRating > 0" class="rating-text"> -->
@@ -65,6 +128,14 @@
         </div>
       </div>
     </div>
+
+    <!-- Booking Request Modal -->
+    <div class="booking-request-modal" *ngIf="incomingBooking">
+      <div class="modal-content">
+        <h3>New Booking Request</h3>
+        <p><strong>Ride ID:</strong> {{ incomingBooking.rideId }}</p>
+        <p><strong>User ID:</strong> {{ incomingBooking.userId }}</p>
+        <p>Do you want to accept this booking?</p>
     <!-- 🧩 Booking Request Popup -->
     <div class="booking-request-modal" *ngIf="incomingBooking">
       <div class="modal-content">
@@ -74,14 +145,17 @@
         <p>Do you want to accept this booking?</p>
 
         <div class="modal-buttons">
-          <button class="accept-btn" (click)="respondToBooking('Accepted')">✅ Accept</button>
-          <button class="reject-btn" (click)="respondToBooking('Rejected')">❌ Reject</button>
+          <button class="accept-btn" (click)="respondToBooking('Accepted')">
+            ✅ Accept
+          </button>
+          <button class="reject-btn" (click)="respondToBooking('Rejected')">
+            ❌ Reject
+          </button>
         </div>
       </div>
     </div>
 
-
-    <!-- ❌ Error Message (if API error occurs) -->
+    <!-- Error Message -->
     <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}
     </div>
@@ -110,8 +184,7 @@
   </div>
 </div>
 
-
-
+<!-- Login Modal -->
 <div class="modal-backdrop" *ngIf="showLoginModal">
   <div class="modal-content">
     <app-login (close)="closeLoginModal()"></app-login>
