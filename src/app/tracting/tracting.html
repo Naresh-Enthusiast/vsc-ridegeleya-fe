@@ -1,0 +1,79 @@
+<div class="container">
+    <div id="map" style="height: 400px; width: 00px;"  ></div>
+  <div class="card">
+    <h2 class="title">Driver Details</h2>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading driver details...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="error">
+      <p>Failed to load driver details. Please try again.</p>
+    </div>
+
+    <!-- Driver Details -->
+    <div *ngIf="driverDetails && !loading" class="driver-content">
+      <div class="driver-header">
+        <div class="driver-info">
+          <div class="avatar">
+            {{ getInitial(driverDetails.name) }}
+          </div>
+          <div class="info">
+            <h3 class="driver-name">{{ driverDetails.name }}</h3>
+            <div class="rating">
+              <span class="star">⭐</span>
+              <span class="rating-value">{{ driverDetails.rating }} rating</span>
+            </div>
+            <div class="license">
+              License: {{ driverDetails.license }}
+            </div>
+          </div>
+        </div>
+        <button class="call-btn" (click)="callDriver()">
+          <span class="phone-icon">📞</span>
+          Call
+        </button>
+      </div>
+
+      <div class="vehicle-details">
+        <div class="detail-row">
+          <span class="label">Vehicle:</span>
+          <div class="value-group">
+            <span class="value">{{ driverDetails.vehicle }}</span><br><br><br>
+            <span class="label-small">Number:</span>
+            <span class="number-plate">{{ driverDetails.number }}</span>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Color:</span>
+          <div class="value-group">
+            <span class="value">{{ driverDetails.color | titlecase }}</span>
+            <span class="label-small">Seats:</span>
+            <span class="seats">{{ driverDetails.availableSeats }} available</span>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Status:</span>
+          <span class="status-badge" [class.approved]="driverDetails.status === 'Approved'">
+            {{ driverDetails.status }}
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Email:</span>
+          <span class="value">{{ driverDetails.email }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Phone:</span>
+          <span class="value">{{ driverDetails.phone }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

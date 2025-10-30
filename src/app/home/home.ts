@@ -86,6 +86,14 @@ export class HomeComponent implements OnInit {
 
     this.signalRService.rideResponses$.subscribe((data) => {
       if (data) alert(`Your booking was ${data.status} by publisher.`);
+      if (data) {
+        console.log('Received ride response:', data);
+        alert(`Your booking was ${data.status} by publisher.`);
+        console.log("Redirecting to tracking page...");
+        if(data.status === 'Accepted') {
+          window.location.href = '/tracting';
+        }
+      }
     });
   }
 
@@ -203,12 +211,22 @@ export class HomeComponent implements OnInit {
       }
 
       let userId = parseInt(localStorage.getItem('userId') || '0', 10);
-      if (!userId) {
-        userId = this.userId;
+      
+      if (!userId || userId === 0) {
+        userId = this.userId || Math.floor(Math.random() * 1000) + 1;
         localStorage.setItem('userId', userId.toString());
       }
 
       const seats = this.rideQuery.passengers || 1;
+
+
+      localStorage.setItem('rideId', rideId.toString());
+      localStorage.setItem('seats', seats.toString());
+      localStorage.setItem('userId', userId.toString());
+     
+
+      console.log('Booking parameters ready:', { rideId, userId, seats, publisherId });
+
       const bookingUrl = `http://localhost:5205/api/v1/Booking?userId=${userId}&rideId=${rideId}&seats=${seats}`;
 
       this.http.post(bookingUrl, null, { responseType: 'json' }).subscribe({
@@ -245,8 +263,15 @@ export class HomeComponent implements OnInit {
   /** ✅ Publisher response */
   respondToBooking(status: string) {
     if (!this.incomingBooking) return;
-    const { userId, rideId } = this.incomingBooking;
-    this.signalRService.PublisherResponded(userId, rideId, status);
+    
+    const { userId, rideId} = this.incomingBooking;
+    const seats=localStorage.getItem('seats') ? parseInt(localStorage.getItem('seats')!, 10) : 1;
+
+   
+    this.signalRService.PublisherResponded(userId, rideId, status,seats);
+
+    console.log(`Publisher responded with ${status} for ride ${rideId}`);
+
     alert(`You have ${status} the booking request.`);
     this.incomingBooking = null;
   }

@@ -63,9 +63,9 @@ export class SignalRServices {
   }
 
   //publisher responds to booking -> notify user
-  PublisherResponded(userId: number, rideId: number, status: string): void {
+  PublisherResponded(userId: number, rideId: number, status: string,seats:number): void {
     console.log("publisher response");
-    this.hubConnection.invoke('PublisherResponded', userId, rideId, status)
+    this.hubConnection.invoke('PublisherResponded', userId, rideId, status,seats)
       .catch(err => console.error('SignalR invoke error', err));
   }
   // Listen when Admin approves a request

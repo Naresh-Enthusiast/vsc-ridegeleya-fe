@@ -1,0 +1,295 @@
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#map {
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 20px 0;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #64748b;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error {
+  padding: 40px;
+  text-align: center;
+  color: #dc2626;
+  font-size: 16px;
+}
+
+.driver-content {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.driver-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.driver-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  background: #e3f2fd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1976d2;
+  font-size: 28px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.driver-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.star {
+  font-size: 18px;
+}
+
+.rating-value {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+}
+
+.license {
+  font-size: 13px;
+  color: #666;
+}
+
+.call-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #00c853;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.call-btn:hover {
+  background: #00a843;
+}
+
+.call-btn:active {
+  transform: scale(0.98);
+}
+
+.phone-icon {
+  font-size: 18px;
+}
+
+.vehicle-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row:hover {
+  background: transparent;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  min-width: 80px;
+}
+
+.label-small {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  margin-left: 20px;
+}
+
+.value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.value-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.number-plate {
+  background: #333;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.seats {
+  font-size: 14px;
+  color: #00c853;
+  font-weight: 600;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #f0f0f0;
+  color: #666;
+}
+
+.status-badge.approved {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 24px;
+  }
+
+  .driver-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .driver-info {
+    width: 100%;
+  }
+
+  .call-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .value-group {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .label-small {
+    margin-left: 0;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+
+  .driver-name {
+    font-size: 20px;
+  }
+}
